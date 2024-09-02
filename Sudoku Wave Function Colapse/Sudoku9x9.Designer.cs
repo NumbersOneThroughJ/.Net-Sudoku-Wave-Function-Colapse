@@ -75,6 +75,7 @@
             sudoku3x39.Name = "sudoku3x39";
             sudoku3x39.Size = new Size(44, 44);
             sudoku3x39.TabIndex = 8;
+            sudoku3x39.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x38
             // 
@@ -85,6 +86,7 @@
             sudoku3x38.Name = "sudoku3x38";
             sudoku3x38.Size = new Size(44, 44);
             sudoku3x38.TabIndex = 7;
+            sudoku3x38.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x37
             // 
@@ -95,6 +97,7 @@
             sudoku3x37.Name = "sudoku3x37";
             sudoku3x37.Size = new Size(44, 44);
             sudoku3x37.TabIndex = 6;
+            sudoku3x37.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x36
             // 
@@ -105,6 +108,7 @@
             sudoku3x36.Name = "sudoku3x36";
             sudoku3x36.Size = new Size(44, 44);
             sudoku3x36.TabIndex = 5;
+            sudoku3x36.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x35
             // 
@@ -115,6 +119,7 @@
             sudoku3x35.Name = "sudoku3x35";
             sudoku3x35.Size = new Size(44, 44);
             sudoku3x35.TabIndex = 4;
+            sudoku3x35.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x34
             // 
@@ -125,6 +130,7 @@
             sudoku3x34.Name = "sudoku3x34";
             sudoku3x34.Size = new Size(44, 44);
             sudoku3x34.TabIndex = 3;
+            sudoku3x34.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x33
             // 
@@ -135,6 +141,7 @@
             sudoku3x33.Name = "sudoku3x33";
             sudoku3x33.Size = new Size(44, 44);
             sudoku3x33.TabIndex = 2;
+            sudoku3x33.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x31
             // 
@@ -145,6 +152,7 @@
             sudoku3x31.Name = "sudoku3x31";
             sudoku3x31.Size = new Size(44, 44);
             sudoku3x31.TabIndex = 0;
+            sudoku3x31.NeedUpdate += InvokeUpdate;
             // 
             // sudoku3x32
             // 
@@ -155,6 +163,7 @@
             sudoku3x32.Name = "sudoku3x32";
             sudoku3x32.Size = new Size(44, 44);
             sudoku3x32.TabIndex = 1;
+            sudoku3x32.NeedUpdate += InvokeUpdate;
             // 
             // Sudoku9x9
             // 

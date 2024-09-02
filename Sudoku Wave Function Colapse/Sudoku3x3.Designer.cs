@@ -76,6 +76,7 @@
             sudokuInnerSquare1.Name = "sudokuInnerSquare1";
             sudokuInnerSquare1.Size = new Size(50, 50);
             sudokuInnerSquare1.TabIndex = 0;
+            sudokuInnerSquare1.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare2
             // 
@@ -86,6 +87,7 @@
             sudokuInnerSquare2.Name = "sudokuInnerSquare2";
             sudokuInnerSquare2.Size = new Size(50, 50);
             sudokuInnerSquare2.TabIndex = 1;
+            sudokuInnerSquare2.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare3
             // 
@@ -96,6 +98,7 @@
             sudokuInnerSquare3.Name = "sudokuInnerSquare3";
             sudokuInnerSquare3.Size = new Size(50, 50);
             sudokuInnerSquare3.TabIndex = 2;
+            sudokuInnerSquare3.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare4
             // 
@@ -106,6 +109,7 @@
             sudokuInnerSquare4.Name = "sudokuInnerSquare4";
             sudokuInnerSquare4.Size = new Size(50, 50);
             sudokuInnerSquare4.TabIndex = 3;
+            sudokuInnerSquare4.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare5
             // 
@@ -116,6 +120,7 @@
             sudokuInnerSquare5.Name = "sudokuInnerSquare5";
             sudokuInnerSquare5.Size = new Size(50, 50);
             sudokuInnerSquare5.TabIndex = 4;
+            sudokuInnerSquare5.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare6
             // 
@@ -126,6 +131,7 @@
             sudokuInnerSquare6.Name = "sudokuInnerSquare6";
             sudokuInnerSquare6.Size = new Size(50, 50);
             sudokuInnerSquare6.TabIndex = 5;
+            sudokuInnerSquare6.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare7
             // 
@@ -136,6 +142,7 @@
             sudokuInnerSquare7.Name = "sudokuInnerSquare7";
             sudokuInnerSquare7.Size = new Size(50, 50);
             sudokuInnerSquare7.TabIndex = 6;
+            sudokuInnerSquare7.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare8
             // 
@@ -146,6 +153,7 @@
             sudokuInnerSquare8.Name = "sudokuInnerSquare8";
             sudokuInnerSquare8.Size = new Size(50, 50);
             sudokuInnerSquare8.TabIndex = 7;
+            sudokuInnerSquare8.NeedUpdate += this.InvokeUpdate;
             // 
             // sudokuInnerSquare9
             // 
@@ -156,6 +164,7 @@
             sudokuInnerSquare9.Name = "sudokuInnerSquare9";
             sudokuInnerSquare9.Size = new Size(50, 50);
             sudokuInnerSquare9.TabIndex = 8;
+            sudokuInnerSquare9.NeedUpdate += this.InvokeUpdate;
             // 
             // Sudoku3x3
             // 

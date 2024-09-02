@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             splitContainer1 = new SplitContainer();
-            sudoku9x91 = new Sudoku9x9();
             label1 = new Label();
+            sudoku9x91 = new Sudoku9x9();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -54,14 +54,6 @@
             splitContainer1.SplitterDistance = 266;
             splitContainer1.TabIndex = 0;
             // 
-            // sudoku9x91
-            // 
-            sudoku9x91.Dock = DockStyle.Fill;
-            sudoku9x91.Location = new Point(0, 0);
-            sudoku9x91.Name = "sudoku9x91";
-            sudoku9x91.Size = new Size(530, 450);
-            sudoku9x91.TabIndex = 0;
-            // 
             // label1
             // 
             label1.AutoSize = true;
@@ -70,6 +62,15 @@
             label1.Size = new Size(38, 15);
             label1.TabIndex = 0;
             label1.Text = "label1";
+            // 
+            // sudoku9x91
+            // 
+            sudoku9x91.Dock = DockStyle.Fill;
+            sudoku9x91.Location = new Point(0, 0);
+            sudoku9x91.Name = "sudoku9x91";
+            sudoku9x91.Size = new Size(530, 450);
+            sudoku9x91.TabIndex = 0;
+            sudoku9x91.NeedUpdate += InvokeUpdate;
             // 
             // Form1
             // 

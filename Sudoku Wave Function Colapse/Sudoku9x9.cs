@@ -13,6 +13,9 @@ namespace Sudoku_Wave_Function_Colapse
     public partial class Sudoku9x9 : UserControl
     {
         Sudoku3x3[][] sudoku3x3_arr;
+
+        public event EventHandler<bool> NeedUpdate;
+
         public Sudoku9x9()
         {
             InitializeComponent();
@@ -89,10 +92,11 @@ namespace Sudoku_Wave_Function_Colapse
             }
             sudoku3x3_arr[0][0].innerSquares[0][0].setNumber(9);
             sudoku3x3_arr[0][1].innerSquares[0][1].setNumber(8);
-            sudoku3x3_arr[0][2].innerSquares[0][2].setNumber(6);
-            sudoku3x3_arr[1][0].innerSquares[1][0].setNumber(5);
-            sudoku3x3_arr[1][1].innerSquares[1][1].setNumber(3);
-            sudoku3x3_arr[1][2].innerSquares[1][2].setNumber(2);
+        }
+
+        public void InvokeUpdate(object sender, bool e)
+        {
+            NeedUpdate.Invoke(this, true);
         }
     }
 }

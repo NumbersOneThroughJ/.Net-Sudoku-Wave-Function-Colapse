@@ -3,50 +3,52 @@ using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule;
 using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules;
 using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._2D;
 using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.ArrayRules._2D;
+using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
 
 namespace Sudoku_Wave_Function_Colapse
 {
     public partial class Form1 : Form
     {
+        private IRule_2D_Base collumDivider;
+        private IRule_2D_Base SudokuSingleSquareRule;
+        private IRule_2D_Base SudokuVerticalRule;
+        private IRule_2D_Base SudokuHorizontalRule;
+
+        private IRule_2D_Base fullRuleSet;
+
+        static int[] finalValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
         public Form1()
         {
+            collumDivider = new Rule_2D_AxisDivider(3, true, Sudoku_Rules.makeDictionaryOfSquareMasks());
+            SudokuSingleSquareRule = new Rule_2D_AxisDivider(3, false, (IRule_2D_Base)collumDivider);
+            SudokuVerticalRule = Sudoku_Rules.makeVerticalDictionaryOfMasks();
+            SudokuHorizontalRule = Sudoku_Rules.makeHorizontalDictionaryOfMasks();
+
+            fullRuleSet = new Rule_2D_Set(new List<IRule_2D_Base> { SudokuSingleSquareRule, SudokuVerticalRule, SudokuHorizontalRule }, true);
+
             InitializeComponent();
             sudoku9x91.reset();
-            IRule_2D_Base collumDivider = new Rule_2D_AxisDivider(3, false, Sudoku_Rules.makeDictionaryOfSquareMasks());
-            IRule_2D_Base SudokuSingleSquareRule = new Rule_2D_AxisDivider(3, false, (IRule_2D_Base)collumDivider);
-            IRule_2D_Base SudokuVerticalRule = Sudoku_Rules.makeVerticalDictionaryOfMasks();
-            IRule_2D_Base SudokuHorizontalRule = Sudoku_Rules.makeHorizontalDictionaryOfMasks();
-
-            IRule_2D_Base fullRuleSet = new Rule_2D_Set(new List<IRule_2D_Base> { SudokuSingleSquareRule, SudokuVerticalRule, SudokuHorizontalRule}, true);
 
             sudoku9x91.setAvailables(fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs());
         }
 
-        private String getLabelText()
+        private String getLabelText(int[][][] vals, int[,] currentVals)
         {
-            int[,] map =
+            String returnString = "";
+            List<Point> mins = WFC_MinFinder_Arr.findMinimums(vals, currentVals, finalValues);
+            foreach(Point p in mins)
             {
-                {0,0,0,0,0},
-                {0,0,8,0,0},
-                {0,4,5,6,0},
-                {0,0,7,0,0},
-                {0,0,0,0,0},
-            };
-
-            IRule_2D_Base yDivider = new Rule_2D_AxisDivider(2, false, Sudoku_Rules.make2DRuleMask(5));
-            IRule_2D_Base xDivider = new Rule_2D_AxisDivider(2, true, yDivider);
-            String returnString = xDivider.evaluatePoint(2,3, map).ToString();
-            /*for(int row = 0; row<output.GetLength(0); row++)
-            { 
-                for(int col = 0; col<output.GetLength(1); col++)
-                {
-                    returnString += output[row,col]+" ";
-                }
-                returnString += "\n";
-            }*/
+                returnString += p.X + " " + p.Y + " length: " + vals[p.Y][p.X].Length + "\n";
+            }
             return returnString;
-            //return string.Join(", ", test.evaluate());
-            //return test.evaluate(1).ToString();
+        }
+
+        public void InvokeUpdate(object sender, bool e)
+        {
+            int[][][] vals = fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs();
+            sudoku9x91.setAvailables(vals);
+            label1.Text = getLabelText(vals, sudoku9x91.getTableAlt());
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Sudoku_Wave_Function_Colapse
         private int number = -1;
         public int Number { get { return number; } }
 
-        public event EventHandler<int> NeedUpdate;
+        public event EventHandler<bool> NeedUpdate;
 
         //Font Autosizer Instance
         FontAutoSizer<RichTextBox> FontSizer;
@@ -44,7 +44,7 @@ namespace Sudoku_Wave_Function_Colapse
             FontSizer.addTarget(NumberTextBox);
 
             number = -1;
-
+            NumberPanel.Visible = true;
         }
 
         //-------------------------------- Events
@@ -118,6 +118,7 @@ namespace Sudoku_Wave_Function_Colapse
             {
                 this.number = number;
                 setTextFromNumber();
+                NumberPanel.Visible = false;
             }
         }
 
@@ -140,6 +141,8 @@ namespace Sudoku_Wave_Function_Colapse
             panel.Visible = false;
 
             setNumber(e);
+
+            NeedUpdate.Invoke(this, true);
         }
 
         private void NumberTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -149,6 +152,8 @@ namespace Sudoku_Wave_Function_Colapse
             NumberPanel.Size = new Size(1000, 1000);
             NumberPanel.BringToFront();
             */
+            resetNumber();
+            NeedUpdate.Invoke(this, true);
             NumberPanel.Visible = true;
         }
         /// <summary>

@@ -17,6 +17,9 @@ namespace Sudoku_Wave_Function_Colapse
         [Browsable(true)] // This makes the property visible in the designer
         [EditorBrowsable(EditorBrowsableState.Always)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+
+        public event EventHandler<bool> NeedUpdate;
+
         public Point LocalLocation
         {
             get { return _localLocation; }
@@ -82,6 +85,11 @@ namespace Sudoku_Wave_Function_Colapse
                     sq.setNumber(-1);
                 }
             }
+        }
+
+        public void InvokeUpdate(object sender, bool e)
+        {
+            NeedUpdate.Invoke(this, true);
         }
 
     }
