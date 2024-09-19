@@ -15,7 +15,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
 
             for(int y = 0; y< possibleValuesArr.Length; y++)
             {
-                for (int x = 1; x< possibleValuesArr[y].Length; x++)
+                for (int x = 0; x< possibleValuesArr[y].Length; x++)
                 {
                     int ArrLen = possibleValuesArr[y][x].Length;
                     if (!(endValues.Contains(currentVals[y,x])))

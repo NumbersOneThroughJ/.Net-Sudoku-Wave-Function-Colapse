@@ -23,8 +23,11 @@ namespace Sudoku_Wave_Function_Colapse
         //This squares sudoku number
         private int number = -1;
         public int Number { get { return number; } }
+        private Color defaultColor;
 
         public event EventHandler<bool> NeedUpdate;
+
+
 
         //Font Autosizer Instance
         FontAutoSizer<RichTextBox> FontSizer;
@@ -45,6 +48,7 @@ namespace Sudoku_Wave_Function_Colapse
 
             number = -1;
             NumberPanel.Visible = true;
+            defaultColor = BackColor;
         }
 
         //-------------------------------- Events
@@ -168,6 +172,11 @@ namespace Sudoku_Wave_Function_Colapse
                 //MessageBox.Show(string.Join(", ", availableNums));
             }
             NumberPanel.setPossibleNumbers(availableNums);
+        }
+
+        public void setPriority(bool highlight)
+        {
+            BackColor = highlight ? Color.LightGoldenrodYellow : defaultColor;
         }
     }
 }

@@ -33,6 +33,12 @@ namespace Sudoku_Wave_Function_Colapse
             sudoku9x91.setAvailables(fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs());
         }
 
+        private void highlightMinimums(int[][][] vals, int[,] currentVals)
+        {
+            List<Point> mins = WFC_MinFinder_Arr.findMinimums(vals, currentVals, finalValues);
+            sudoku9x91.highlightSquares(mins);
+        }
+
         private String getLabelText(int[][][] vals, int[,] currentVals)
         {
             String returnString = "";
@@ -49,6 +55,7 @@ namespace Sudoku_Wave_Function_Colapse
             int[][][] vals = fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs();
             sudoku9x91.setAvailables(vals);
             label1.Text = getLabelText(vals, sudoku9x91.getTableAlt());
+            highlightMinimums(vals, sudoku9x91.getTableAlt());
         }
     }
 }

@@ -76,6 +76,15 @@ namespace Sudoku_Wave_Function_Colapse
             }
         }
 
+        public void setPriority(int x, int y, bool highlighted)
+        {
+            innerSquares[y][x].setPriority(true);
+        }
+        public void setPriority(Point p, bool highlighted)
+        {
+            setPriority(p.X, p.Y, highlighted);
+        }
+
         public void reset()
         {
             foreach(SudokuInnerSquare[] sqs  in innerSquares)
@@ -83,6 +92,18 @@ namespace Sudoku_Wave_Function_Colapse
                 foreach(SudokuInnerSquare sq in sqs)
                 {
                     sq.setNumber(-1);
+                    sq.setPriority(false);
+                }
+            }
+        }
+
+        public void resetAllPriorities()
+        {
+            foreach (SudokuInnerSquare[] sqs in innerSquares)
+            {
+                foreach (SudokuInnerSquare sq in sqs)
+                {
+                    sq.setPriority(false);
                 }
             }
         }

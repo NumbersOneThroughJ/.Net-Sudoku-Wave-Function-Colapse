@@ -77,7 +77,21 @@ namespace Sudoku_Wave_Function_Colapse
                 for (int x = 0; x < 3; x++)
                 {
                     sudoku3x3_arr[x][y].setAvailables(possibles);
+                    sudoku3x3_arr[x][y].resetAllPriorities();
                 }
+            }
+        }
+
+        public void highlightSquares(List<Point> points)
+        {
+            foreach(Point p in points)
+            {
+                int subX = (int)(p.X) / 3;
+                int subY = (int)(p.Y) / 3;
+                int x1 = p.X % 3;
+                int y1 = p.Y % 3;
+                Point subPoint = new Point(x1, y1);
+                sudoku3x3_arr[subY][subX].setPriority(subPoint, true);
             }
         }
 
