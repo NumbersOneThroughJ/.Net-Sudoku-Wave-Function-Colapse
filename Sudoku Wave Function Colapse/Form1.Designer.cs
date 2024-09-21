@@ -31,6 +31,7 @@
             splitContainer1 = new SplitContainer();
             label1 = new Label();
             sudoku9x91 = new Sudoku9x9();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -45,6 +46,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(button1);
             splitContainer1.Panel1.Controls.Add(label1);
             // 
             // splitContainer1.Panel2
@@ -72,6 +74,16 @@
             sudoku9x91.TabIndex = 0;
             sudoku9x91.NeedUpdate += InvokeUpdate;
             // 
+            // button1
+            // 
+            button1.Location = new Point(17, 15);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 1;
+            button1.Text = "try WFC Brain";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -93,5 +105,6 @@
         private SplitContainer splitContainer1;
         private Sudoku9x9 sudoku9x91;
         private Label label1;
+        private Button button1;
     }
 }

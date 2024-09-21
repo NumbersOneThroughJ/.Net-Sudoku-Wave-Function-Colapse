@@ -19,11 +19,52 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
      */
     internal class WFC_CheckPoints
     {
-        private List<WFC_CheckPoints> checkPoints;
+        private Stack<WFC_Branch> checkPoints;
+        public WFC_Branch LAST_BRANCH { get { return checkPoints.Peek(); } }
+        public int NUMBER_OF_BRANCHES { get { return checkPoints.Count; } }
+        public Point LATEST_LOC { get
+            {
+                if (checkPoints.Count > 0)
+                {
+                    return LAST_BRANCH.LocationOfChange;
+                }
+                return new Point(-1, -1);
+            } }
 
-        public PossibleValuesMap returnToCheckPoint(int i, PossibleValuesMap current)
+        public Point resetToLatestCheckPoint(int[][] currentValuesMap)
         {
-            throw new NotImplementedException();
+            currentValuesMap[LAST_BRANCH.Y][LAST_BRANCH.X] = WFC_Constants.DEFAULT_VALUE;
+            return LAST_BRANCH.LocationOfChange;
         }
+
+        public Point resetToPreviousCheckPoint(int[][] currentValuesMap)
+        {
+            resetToLatestCheckPoint(currentValuesMap);
+            checkPoints.Pop();
+            if(checkPoints.Count > 0)
+            {
+                resetToLatestCheckPoint(currentValuesMap);
+                return LAST_BRANCH.LocationOfChange;
+            }
+            return new Point(-1, -1);
+        }
+
+        public Point resetBackAmountOfCheckPoints(int[][] currentValuesMap, int numberToUndo)
+        {
+            for(int i = Math.Min(numberToUndo, NUMBER_OF_BRANCHES); i>0; i--)
+            {
+                resetToLatestCheckPoint(currentValuesMap);
+                checkPoints.Pop();
+            }
+            return LATEST_LOC;
+        }
+
+        public void addBranch(WFC_Branch branch)
+        {
+            checkPoints.Push(branch);
+        }
+
+
+
     }
 }

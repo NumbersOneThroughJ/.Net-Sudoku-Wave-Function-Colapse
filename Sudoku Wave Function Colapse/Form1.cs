@@ -17,6 +17,8 @@ namespace Sudoku_Wave_Function_Colapse
         private IRule_2D_Base fullRuleSet;
 
         static int[] finalValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        int[][][] vals;
+        WFC_Brain brain;
 
         public Form1()
         {
@@ -26,11 +28,11 @@ namespace Sudoku_Wave_Function_Colapse
             SudokuHorizontalRule = Sudoku_Rules.makeHorizontalDictionaryOfMasks();
 
             fullRuleSet = new Rule_2D_Set(new List<IRule_2D_Base> { SudokuSingleSquareRule, SudokuVerticalRule, SudokuHorizontalRule }, true);
-
+            brain = new WFC_Brain(finalValues);
             InitializeComponent();
             sudoku9x91.reset();
-
-            sudoku9x91.setAvailables(fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs());
+            InvokeUpdate(this, true);
+            tryWFC_BRAIN();
         }
 
         private void highlightMinimums(int[][][] vals, int[,] currentVals)
@@ -39,23 +41,27 @@ namespace Sudoku_Wave_Function_Colapse
             sudoku9x91.highlightSquares(mins);
         }
 
-        private String getLabelText(int[][][] vals, int[,] currentVals)
+        private void tryWFC_BRAIN()
         {
-            String returnString = "";
-            List<Point> mins = WFC_MinFinder_Arr.findMinimums(vals, currentVals, finalValues);
-            foreach(Point p in mins)
-            {
-                returnString += p.X + " " + p.Y + " length: " + vals[p.Y][p.X].Length + "\n";
-            }
-            return returnString;
+            brain.collapseAPoint(vals, sudoku9x91.getTableAlt(), setMapLocation);
+            InvokeUpdate(this, true);
         }
 
         public void InvokeUpdate(object sender, bool e)
         {
-            int[][][] vals = fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs();
+            vals = fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs();
             sudoku9x91.setAvailables(vals);
-            label1.Text = getLabelText(vals, sudoku9x91.getTableAlt());
             highlightMinimums(vals, sudoku9x91.getTableAlt());
+        }
+
+        public void setMapLocation(Point p, int val)
+        {
+            sudoku9x91.setNumber(p, val);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            tryWFC_BRAIN();
         }
     }
 }

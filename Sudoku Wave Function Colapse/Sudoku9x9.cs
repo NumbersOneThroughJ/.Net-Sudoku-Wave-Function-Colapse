@@ -95,6 +95,16 @@ namespace Sudoku_Wave_Function_Colapse
             }
         }
 
+        public void setNumber(Point p, int val)
+        {
+            int subX = (int)(p.X) / 3;
+            int subY = (int)(p.Y) / 3;
+            int x1 = p.X % 3;
+            int y1 = p.Y % 3;
+            Point subPoint = new Point(x1, y1);
+            sudoku3x3_arr[subY][subX].setNumber(subPoint, val);
+        }
+
         public void reset()
         {
             foreach(Sudoku3x3[] sqs in sudoku3x3_arr)

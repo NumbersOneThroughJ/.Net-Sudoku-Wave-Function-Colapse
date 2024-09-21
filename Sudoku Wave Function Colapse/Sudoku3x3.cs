@@ -84,6 +84,14 @@ namespace Sudoku_Wave_Function_Colapse
         {
             setPriority(p.X, p.Y, highlighted);
         }
+        public void setNumber(int x, int y, int val)
+        {
+            innerSquares[y][x].setNumber(val);
+        }
+        public void setNumber(Point p, int val)
+        {
+            setNumber(p.X, p.Y, val);
+        }
 
         public void reset()
         {

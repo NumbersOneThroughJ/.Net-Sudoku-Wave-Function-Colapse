@@ -9,8 +9,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
     internal class WFC_ValueDictionary<e> where e : notnull
     {
         private Stack<e> valueDic;
+        private Stack<int> validEndKeys;
         private int latestIndex;
         public int SIZE { get { return latestIndex; } }
+        public int[] FINALVALS { get { return validEndKeys.ToArray(); } }
 
         public WFC_ValueDictionary()
         {
@@ -32,6 +34,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             {
                 latestIndex++;
                 valueDic.Push(item);
+                validEndKeys.Push(latestIndex);
                 return latestIndex;
             }
             return -1;
