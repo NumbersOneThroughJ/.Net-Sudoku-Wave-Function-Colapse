@@ -15,14 +15,15 @@ namespace Sudoku_Wave_Function_Colapse
         private IRule_2D_Base SudokuHorizontalRule;
 
         private IRule_2D_Base fullRuleSet;
+        WFC_Manager WaveFunctionCollapse;
 
         static int[] finalValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        WFC_Manager WaveFunctionCollapse;
+        private int[,] defaults;
 
         public Form1()
         {
             InitializeComponent();
-            
+
             collumDivider = new Rule_2D_AxisDivider(3, true, Sudoku_Rules.makeDictionaryOfSquareMasks());
             SudokuSingleSquareRule = new Rule_2D_AxisDivider(3, false, (IRule_2D_Base)collumDivider);
             SudokuVerticalRule = Sudoku_Rules.makeVerticalDictionaryOfMasks();
@@ -63,6 +64,7 @@ namespace Sudoku_Wave_Function_Colapse
             };
             sudoku9x91.setBoard(board);
             */
+            defaults = sudoku9x91.getTableAlt();
         }
 
         private void highlightMinimums(int[,][] vals, int[,] currentVals)
@@ -85,13 +87,17 @@ namespace Sudoku_Wave_Function_Colapse
 
         private void button1_Click(object sender, EventArgs e)
         {
-            String startTime = System.DateTime.Now.ToString();
-            label1.Text = startTime;
+            defaults = sudoku9x91.getTableAlt();
+            Start_Time_TxtBox.Text = System.DateTime.Now.ToString();
             int[,] mapValues = sudoku9x91.getTableAlt();
             mapValues = WaveFunctionCollapse.CollapseFullMap(mapValues);
             sudoku9x91.setBoard(mapValues);
-            String endTime = System.DateTime.Now.ToString();
-            label1.Text += "\n" + endTime;
+            End_Time_TxtBox.Text = System.DateTime.Now.ToString();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            sudoku9x91.setBoard(defaults);
         }
     }
 }
