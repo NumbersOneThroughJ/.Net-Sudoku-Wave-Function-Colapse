@@ -31,40 +31,94 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
                 return new Point(-1, -1);
             } }
 
-        public Point resetToLatestCheckPoint(int[][] currentValuesMap)
+        public WFC_CheckPoints()
         {
-            currentValuesMap[LAST_BRANCH.Y][LAST_BRANCH.X] = WFC_Constants.DEFAULT_VALUE;
+            checkPoints = new Stack<WFC_Branch>();
+            addBranch(new WFC_Branch(new Point(-1, -1), -999));
+        }
+
+        public Point resetToLatestCheckPoint(int[,] currentValuesMap, Action<int[,], Point> resetAction)
+        {
+            resetAction(currentValuesMap, LATEST_LOC);   
             return LAST_BRANCH.LocationOfChange;
         }
 
-        public Point resetToPreviousCheckPoint(int[][] currentValuesMap)
+        public Point resetToPreviousCheckPoint(int[,] currentValuesMap, Action<int[,], Point> resetAction)
         {
-            resetToLatestCheckPoint(currentValuesMap);
+            resetToLatestCheckPoint(currentValuesMap, resetAction);
+            System.Diagnostics.Debug.WriteLine("Resetting point:"+LATEST_LOC);
             checkPoints.Pop();
-            if(checkPoints.Count > 0)
-            {
-                resetToLatestCheckPoint(currentValuesMap);
-                return LAST_BRANCH.LocationOfChange;
-            }
-            return new Point(-1, -1);
+            //resetToLatestCheckPoint(currentValuesMap, resetAction);
+            return LATEST_LOC;
+        }
+        public Point resetToPreviousCheckPoint(int[,] currentValuesMap)
+        {
+            return resetToPreviousCheckPoint(currentValuesMap, DEFAULT_RESETLOCATION);
         }
 
-        public Point resetBackAmountOfCheckPoints(int[][] currentValuesMap, int numberToUndo)
+        public Point resetBackAmountOfCheckPoints(int[,] currentValuesMap, int numberToUndo, Action<int[,], Point> resetAction)
         {
             for(int i = Math.Min(numberToUndo, NUMBER_OF_BRANCHES); i>0; i--)
             {
-                resetToLatestCheckPoint(currentValuesMap);
+                resetToLatestCheckPoint(currentValuesMap, resetAction);
                 checkPoints.Pop();
             }
             return LATEST_LOC;
         }
+        public Point resetBackAmountOfCheckPoints(int[,] currentValuesMap, int numberToUndo)
+        {
+            return resetBackAmountOfCheckPoints(currentValuesMap, numberToUndo);
+        }
 
         public void addBranch(WFC_Branch branch)
         {
+            System.Diagnostics.Debug.WriteLine("branching at " + branch.LocationOfChange);
             checkPoints.Push(branch);
+            System.Diagnostics.Debug.WriteLine(" -Latest branch is at " + LATEST_LOC);
         }
 
+        public bool validateToLastCheckPoint(Point p, int val)
+        {
+            System.Diagnostics.Debug.WriteLine("Validating To Last CheckPoint");
+            WFC_Branch branch = LAST_BRANCH;
+            bool samePoint = p.Equals(branch.LocationOfChange);
+            if (samePoint)
+            {
+                return branch.collapse(val);
+            }
+            addBranch(new WFC_Branch(p, val));
+            return false;
+        }
 
+        public List<int> removeImpossibleValues(List<int> values)
+        {
+            List<int> impossible = LAST_BRANCH.IMPOSSIBLE_VALUES;
+            foreach(int i in impossible)
+            {
+                values.Remove(i);
+            }
+            return values;
+        }
+        public int[] removeImpossibleValues(int[] values)
+        {
+            return removeImpossibleValues(values.ToList<int>()).ToArray<int>();
+        }
 
+        public static void DEFAULT_RESETLOCATION(int[,] currentValuesMap, Point p)
+        {
+            currentValuesMap[p.Y,p.X] = WFC_Constants.DEFAULT_VALUE;
+        }
+
+        public String toString()
+        {
+            String s = "";
+            s += "CheckPoint Length : " + NUMBER_OF_BRANCHES+"\n";
+            foreach(WFC_Branch b in checkPoints)
+            {
+                s += b.toString();
+                s += "\n";
+            }
+            return s;
+        }
     }
 }

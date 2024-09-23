@@ -105,6 +105,16 @@ namespace Sudoku_Wave_Function_Colapse
             sudoku3x3_arr[subY][subX].setNumber(subPoint, val);
         }
 
+        public void resetPoint(Point p)
+        {
+            int subX = (int)(p.X) / 3;
+            int subY = (int)(p.Y) / 3;
+            int x1 = p.X % 3;
+            int y1 = p.Y % 3;
+            Point subPoint = new Point(x1, y1);
+            sudoku3x3_arr[subY][subX].resetPoint(subPoint);
+        }
+
         public void reset()
         {
             foreach(Sudoku3x3[] sqs in sudoku3x3_arr)
@@ -114,8 +124,6 @@ namespace Sudoku_Wave_Function_Colapse
                     sq.reset();
                 }
             }
-            sudoku3x3_arr[0][0].innerSquares[0][0].setNumber(9);
-            sudoku3x3_arr[0][1].innerSquares[0][1].setNumber(8);
         }
 
         public void InvokeUpdate(object sender, bool e)

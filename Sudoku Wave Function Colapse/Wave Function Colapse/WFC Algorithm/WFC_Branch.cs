@@ -96,5 +96,16 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             return false;
         }
 
+        public String toString()
+        {
+            String s = "";
+            s += loc + " :\n   ";
+            foreach(int i in impossibleValues)
+            {
+                s += ", " + i;
+            }
+            return s;
+        }
+
     }
 }

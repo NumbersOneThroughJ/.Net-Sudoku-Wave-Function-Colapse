@@ -105,6 +105,11 @@ namespace Sudoku_Wave_Function_Colapse
             }
         }
 
+        public void resetPoint(Point p)
+        {
+            innerSquares[p.Y][p.X].resetNumber();
+        }
+
         public void resetAllPriorities()
         {
             foreach (SudokuInnerSquare[] sqs in innerSquares)

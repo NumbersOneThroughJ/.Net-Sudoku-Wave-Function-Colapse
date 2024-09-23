@@ -19,6 +19,8 @@ namespace Sudoku_Wave_Function_Colapse
         static int[] finalValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         int[][][] vals;
         WFC_Brain brain;
+        WFC_CheckPoints checkPoints;
+
 
         public Form1()
         {
@@ -31,8 +33,29 @@ namespace Sudoku_Wave_Function_Colapse
             brain = new WFC_Brain(finalValues);
             InitializeComponent();
             sudoku9x91.reset();
+            
+            int[][] board =
+            {
+                new int[] { 8, -1, -1, -1, -1, -1, -1, -1, -1 },
+                new int[] { -1, -1, 3, 6, -1, -1, -1, -1, -1 },
+                new int[] { -1, 7, -1, -1, 9, -1, 2, -1, -1 },
+                new int[] { -1, 5, -1, -1, -1, 7, -1, -1, -1 },
+                new int[] { -1, -1, -1, -1, 4, 5, 7, -1, -1 },
+                new int[] { -1, -1, -1, 1, -1, -1, -1, 3, -1 },
+                new int[] { -1, -1, 1, -1, -1, -1, -1, 6, 8 },
+                new int[] { -1, -1, 8, 5, -1, -1, -1, 1, -1 },
+                new int[] { -1, 9, -1, -1, -1, -1, 4, -1, -1 },
+
+            };
+            for (int x = 0; x < 9; x++)
+                for (int y = 0; y < 9; y++)
+                {
+                    sudoku9x91.setNumber(new Point(x, y), board[y][x]);
+                }
+
+
+            checkPoints = new WFC_CheckPoints();
             InvokeUpdate(this, true);
-            tryWFC_BRAIN();
         }
 
         private void highlightMinimums(int[][][] vals, int[,] currentVals)
@@ -43,8 +66,23 @@ namespace Sudoku_Wave_Function_Colapse
 
         private void tryWFC_BRAIN()
         {
-            brain.collapseAPoint(vals, sudoku9x91.getTableAlt(), setMapLocation);
+            Point p = brain.collapseAPoint(sudoku9x91.getTableAlt(), setMapLocation, resetPoint, checkPoints, getPossibles);
             InvokeUpdate(this, true);
+        }
+
+        private int[][][] getPossibles()
+        {
+            return fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs();
+        }
+
+        private void updateMap(Point p, int val)
+        {
+            sudoku9x91.setNumber(p, val);
+        }
+
+        private void resetPoint(int[,] map, Point p)
+        {
+            sudoku9x91.resetPoint(p);
         }
 
         public void InvokeUpdate(object sender, bool e)
@@ -52,6 +90,7 @@ namespace Sudoku_Wave_Function_Colapse
             vals = fullRuleSet.getFullTablePossibleData(sudoku9x91.getTableAlt()).getPossibleValuesAs2DArrOfArrs();
             sudoku9x91.setAvailables(vals);
             highlightMinimums(vals, sudoku9x91.getTableAlt());
+            label1.Text = checkPoints.toString();
         }
 
         public void setMapLocation(Point p, int val)
@@ -61,7 +100,36 @@ namespace Sudoku_Wave_Function_Colapse
 
         private void button1_Click(object sender, EventArgs e)
         {
-            tryWFC_BRAIN();
+            for (int i = 0; !finished(); i++)
+                try
+                {
+                    System.Diagnostics.Debug.WriteLine("\n\n\n\n\n");
+                    tryWFC_BRAIN();
+                    if ((i % 100) == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Heeeeey\n\n\n\n");
+                    }
+                } catch
+                {
+
+                }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            checkPoints.resetToPreviousCheckPoint(sudoku9x91.getTableAlt(), resetPoint);
+            label1.Text = checkPoints.toString();
+        }
+
+        private bool finished()
+        {
+            int[,] vals;
+            vals = sudoku9x91.getTableAlt();
+            foreach(int i in vals)
+            {
+                if (i == -1) return false;
+            }
+            return true;
         }
     }
 }

@@ -136,6 +136,7 @@ namespace Sudoku_Wave_Function_Colapse
         {
             number = -1;
             resetText();
+            NumberPanel.Visible=true;
         }
 
         private void NumberPanel_PanelClicked(object sender, int e)

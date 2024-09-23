@@ -29,9 +29,10 @@
         private void InitializeComponent()
         {
             splitContainer1 = new SplitContainer();
+            button1 = new Button();
             label1 = new Label();
             sudoku9x91 = new Sudoku9x9();
-            button1 = new Button();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -46,6 +47,7 @@
             // 
             // splitContainer1.Panel1
             // 
+            splitContainer1.Panel1.Controls.Add(button2);
             splitContainer1.Panel1.Controls.Add(button1);
             splitContainer1.Panel1.Controls.Add(label1);
             // 
@@ -55,6 +57,16 @@
             splitContainer1.Size = new Size(800, 450);
             splitContainer1.SplitterDistance = 266;
             splitContainer1.TabIndex = 0;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(17, 15);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 1;
+            button1.Text = "try WFC Brain";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // label1
             // 
@@ -74,15 +86,15 @@
             sudoku9x91.TabIndex = 0;
             sudoku9x91.NeedUpdate += InvokeUpdate;
             // 
-            // button1
+            // button2
             // 
-            button1.Location = new Point(17, 15);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 1;
-            button1.Text = "try WFC Brain";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button2.Location = new Point(120, 20);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 2;
+            button2.Text = "undo WFC";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // Form1
             // 
@@ -106,5 +118,6 @@
         private Sudoku9x9 sudoku9x91;
         private Label label1;
         private Button button1;
+        private Button button2;
     }
 }
