@@ -70,7 +70,7 @@ namespace Sudoku_Wave_Function_Colapse
             return table;
         }
 
-        public void setAvailables(int[][][] possibles)
+        public void setAvailables(int[,][] possibles)
         {
             for (int y = 0; y < 3; y++)
             {
@@ -103,6 +103,15 @@ namespace Sudoku_Wave_Function_Colapse
             int y1 = p.Y % 3;
             Point subPoint = new Point(x1, y1);
             sudoku3x3_arr[subY][subX].setNumber(subPoint, val);
+        }
+
+        public void setBoard(int[,] map)
+        {
+            for (int x = 0; x < 9; x++)
+                for (int y = 0; y < 9; y++)
+                {
+                    setNumber(new Point(x, y), map[y, x]);
+                }
         }
 
         public void resetPoint(Point p)

@@ -63,7 +63,7 @@ namespace Sudoku_Wave_Function_Colapse
             return nums;
         }
 
-        public void setAvailables(int[][][] possibles)
+        public void setAvailables(int[,][] possibles)
         {
             for(int x = 0; x<3; x++)
             {
@@ -71,7 +71,7 @@ namespace Sudoku_Wave_Function_Colapse
                 for (int y = 0; y<3; y++)
                 {
                     int yI = _localLocation.Y * 3 + y;
-                    innerSquares[y][x].setAvailableNumbers(possibles[yI][xI]);
+                    innerSquares[y][x].setAvailableNumbers(possibles[yI,xI]);
                 }
             }
         }

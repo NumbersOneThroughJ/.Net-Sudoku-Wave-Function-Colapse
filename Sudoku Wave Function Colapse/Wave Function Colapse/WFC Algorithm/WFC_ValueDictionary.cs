@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
 {
-    internal class WFC_ValueDictionary<e> where e : notnull
+    internal class WFC_ValueDictionary<T> where T : notnull
     {
-        private Stack<e> valueDic;
+        private Stack<T> valueDic;
         private Stack<int> validEndKeys;
         private int latestIndex;
         public int SIZE { get { return latestIndex; } }
@@ -17,7 +17,8 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         public WFC_ValueDictionary()
         {
             latestIndex -= 1;
-            valueDic = new Stack<e>();
+            valueDic = new Stack<T>();
+            validEndKeys = new Stack<int>();
         }
 
         /* addToDictionary
@@ -28,7 +29,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
          * Returns:
          *   Integer representing the index of the item added
          */
-        public int addToDictionary(e item)
+        public int addToDictionary(T item)
         {
             if(!valueDic.Contains(item)) 
             {
@@ -47,7 +48,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
          * Returns:
          *   e value of what was assigned via addToDictionary
          */
-        public e convertToValue(int i)
+        public T convertToValue(int i)
         {
             return valueDic.ElementAt(i);
         }

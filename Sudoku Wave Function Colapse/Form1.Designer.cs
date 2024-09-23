@@ -32,7 +32,6 @@
             button1 = new Button();
             label1 = new Label();
             sudoku9x91 = new Sudoku9x9();
-            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -47,7 +46,6 @@
             // 
             // splitContainer1.Panel1
             // 
-            splitContainer1.Panel1.Controls.Add(button2);
             splitContainer1.Panel1.Controls.Add(button1);
             splitContainer1.Panel1.Controls.Add(label1);
             // 
@@ -60,7 +58,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(17, 15);
+            button1.Location = new Point(12, 12);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 1;
@@ -71,7 +69,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(193, 170);
+            label1.Location = new Point(17, 41);
             label1.Name = "label1";
             label1.Size = new Size(38, 15);
             label1.TabIndex = 0;
@@ -85,16 +83,6 @@
             sudoku9x91.Size = new Size(530, 450);
             sudoku9x91.TabIndex = 0;
             sudoku9x91.NeedUpdate += InvokeUpdate;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(120, 20);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 2;
-            button2.Text = "undo WFC";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
             // 
             // Form1
             // 
@@ -118,6 +106,5 @@
         private Sudoku9x9 sudoku9x91;
         private Label label1;
         private Button button1;
-        private Button button2;
     }
 }

@@ -34,12 +34,24 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 }
             return returnArr;
         }
-        public int[][][] getPossibleValuesAs2DArrOfArrs()
+        public int[,][] getPossibleValuesAs2DArrOfArrs()
+        {
+            int[,][] returnArr = new int[map.GetLength(0),map.GetLength(1)][];
+            for (int y = 0; y < map.GetLength(0); y++)
+            {
+                for (int x = 0; x < map.GetLength(1); x++)
+                {
+                    returnArr[y, x] = getPossibleValuesForPoint(x, y).ToArray();
+                }
+            }
+            return returnArr;
+        }
+        public int[][][] getPossibleValuesAsArrOfArrOfArrs()
         {
             int[][][] returnArr = new int[map.GetLength(0)][][];
             for (int y = 0; y < map.GetLength(0); y++)
             {
-                returnArr[y] = new int[map.GetLength(0)][];
+                returnArr[y] = new int[map.GetLength(1)][];
                 for (int x = 0; x < map.GetLength(1); x++)
                 {
                     returnArr[y][x] = getPossibleValuesForPoint(x, y).ToArray();
