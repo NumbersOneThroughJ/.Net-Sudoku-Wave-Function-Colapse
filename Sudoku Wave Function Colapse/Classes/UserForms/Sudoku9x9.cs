@@ -33,13 +33,10 @@ namespace Sudoku_Wave_Function_Colapse
             switch (bigRow)
             {
                 case 0:
-                    //return [1, -1, -1, -1, -1, -1, -1, -1, -1];
                     return sudoku3x31.getRow(row).Concat(sudoku3x32.getRow(row)).Concat(sudoku3x33.getRow(row)).ToArray();
                 case 1:
-                    //return [1, -1, -1, -1, -1, -1, -1, -1, -1];
                     return sudoku3x34.getRow(row).Concat(sudoku3x35.getRow(row)).Concat(sudoku3x36.getRow(row)).ToArray();
                 case 2:
-                    //return [1, -1, -1, -1, -1, -1, -1, -1, -1];
                     return sudoku3x37.getRow(row).Concat(sudoku3x38.getRow(row)).Concat(sudoku3x39.getRow(row)).ToArray();
             }
 

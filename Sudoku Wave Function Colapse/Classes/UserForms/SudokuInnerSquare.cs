@@ -17,9 +17,6 @@ namespace Sudoku_Wave_Function_Colapse
     {
         //--------------------------------Variables
 
-        //Ratio of pixel height
-        const float pixelToFontRatio = (12f / 16f);
-
         //This squares sudoku number
         private int number = -1;
         public int Number { get { return number; } }
