@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,8 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
     internal class WFC_MUX_Hash
     {
         private static readonly int BITCOUNT = 32;
-        List<Int32> hashs;
+        private UInt32[] hashs;
+        public readonly UInt32[] HASHES => hashs;
         
         /// <summary>
         /// alocates a list of integers for enough space for the amount of variables in the multiplexer
@@ -23,7 +25,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <param name="multiplexer"></param>
         public WFC_MUX_Hash(double COUNT)
         {
-            hashs = new List<Int32>( (int)( Math.Ceiling( (COUNT)/(double)BITCOUNT)) );
+            hashs = new UInt32[(int)( Math.Ceiling( (COUNT)/(double)BITCOUNT))];
         }
 
         /// <summary>
@@ -32,9 +34,28 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// USE AN MUX TO MAKE A HASH OTHERWISE
         /// </summary>
         /// <param name="numHashes"></param>
-        private WFC_MUX_Hash(int numHashes)
+        public WFC_MUX_Hash(UInt32 numHashes)
         {
-            hashs = new List<Int32>(numHashes);
+            hashs = new UInt32[numHashes];
+        }
+
+        /// <summary>
+        /// Increases the hash count by the number requested
+        /// </summary>
+        /// <param name="numHashes"></param>
+        public void allocateNewHashes(int numHashes)
+        {
+            Array.Resize(ref hashs, numHashes+hashs.Length);
+        }
+
+        /// <summary>
+        /// Sets the given hash at index given to the new value given
+        /// </summary>
+        /// <param name="hashIndex"></param>
+        /// <param name="hash"></param>
+        public void setHash(UInt32 hashIndex, UInt32 hash)
+        {
+            hashs[hashIndex] = hash;
         }
 
         /// <summary>
@@ -45,13 +66,13 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <returns></returns>
         public static WFC_MUX_Hash operator & (WFC_MUX_Hash h1, WFC_MUX_Hash h2)
         {
-            if (h1.hashs.Capacity != h2.hashs.Capacity)
+            if (h1.hashs.Length != h2.hashs.Length)
             {
                 throw new ArgumentException("Hash Capacities are different. Something went wrong","h1 capacity != h2 capacity");
             }
-            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1.hashs.Capacity);
+            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1.hashs.Length);
 
-            for (int i = 0; i<h1.hashs.Capacity; i++)
+            for (int i = 0; i<h1.hashs.Length; i++)
             {
                 resultHash.hashs[i] = h1.hashs[i] & h2.hashs[i];
             }
@@ -67,13 +88,13 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <returns></returns>
         public static WFC_MUX_Hash operator | (WFC_MUX_Hash h1, WFC_MUX_Hash h2)
         {
-            if (h1.hashs.Capacity != h2.hashs.Capacity)
+            if (h1.hashs.Length != h2.hashs.Length)
             {
                 throw new ArgumentException("Hash Capacities are different. Something went wrong", "h1 capacity != h2 capacity");
             }
-            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1.hashs.Capacity);
+            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1.hashs.Length);
 
-            for (int i = 0; i < h1.hashs.Capacity; i++)
+            for (int i = 0; i < h1.hashs.Length; i++)
             {
                 resultHash.hashs[i] = h1.hashs[i] | h2.hashs[i];
             }
@@ -100,6 +121,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         private int[] weight;
         private List<WFC_MUX_Hash> hashsMade;
         private Dictionary<E, int> outProbDict;
+        private Dictionary<E, int> valueIndexDict;
         //Need a dictionary hash of E to index. This will speed up drastically.
         private int hashesCount;
 
@@ -107,6 +129,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
 
         public int COUNT => outputVariables.Length;
         public int HashCount => hashesCount;
+        public int TOTALBITS => hashesCount * 32;
 
         private static readonly int[] binaryLocation = new int[] {
             0b00000000000000000000000000000001,
@@ -158,6 +181,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             this.weight = weight;
             outProbDict = outputVariabls.Zip(weight).ToDictionary(x => x.First, x => x.Second);
             this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length)/32);
+            this.valueIndexDict = new Dictionary<E, int>();
         }
 
         /// <summary>
@@ -184,6 +208,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <returns></returns>
         private WFC_MUX_Hash listToHash(E[] source, bool weighted)
         {
+            WFC_MUX_Hash returnHash = new WFC_MUX_Hash(hashesCount);
             int index = -1;
 
 
@@ -194,19 +219,102 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
                     ("WFC_MUX_Hash does not contain a reference for the specified value: " + e.ToString());
                 //Stopping here, should the hash be calculated in the mux or in the hash object?
                 // I think the MUX should output hash objects. And that would prevent a hash object from being made outside of the mux.
+
             }
 
-            return new WFC_MUX_Hash();
+
+
+            return returnHash;
         }
 
-        private List<E> HashToList()
+        private List<E> HashToList(WFC_MUX_Hash h)
         {
+            List<E> retList = new List<E>();
 
+            //Loop through the hash
+            //Add a value for each bit found
+            //Honestly, prob just easiest to do an and statement 32 times
+            //would be less processing power too on the for loop
+            //  I have a coding eating disorder. The overhead from a for loop is negligable XD
+
+            for (int i = 0; i<outputVariables.Length; i++)
+            {
+                int hashIndex = i / 32;
+                int hash = 0x0000;//Temp variable so I can write out my brain logic
+                if ((hash & binaryLocation[i%32]) == binaryLocation[i % 32])
+                {
+                    retList.Add(outputVariables[i]);
+                }
+            }
+
+            return retList;
         }
 
+        /// <summary>
+        /// Returns the bit index of the specificed E object
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
         public int bitIndexOf(E e)
         {
-            return Array.IndexOf(outputVariables, e);
+            return valueIndexDict[e];
+        }
+
+        /// <summary>
+        /// Adds a new value and weight to the lists of values and weights
+        /// returns the hash bit index of the newly registered value
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="newWeight"></param>
+        /// <returns></returns>
+        public int registerValue(E e, int newWeight)
+        {
+            // private E[] outputVariables;
+            // private int[] weight;
+            // private List<WFC_MUX_Hash> hashsMade;
+            // private Dictionary<E, int> outProbDict;
+            // private Dictionary<E, int> valueIndexDict;
+            // //Need a dictionary hash of E to index. This will speed up drastically.
+            // private int hashesCount;
+
+            // //Stores the variable e to its index in output variables
+            valueIndexDict.Add(e, outputVariables.Length);
+            //Store the variable e to the weights table
+            outProbDict.Add(e, newWeight);
+            Array.Resize<int> (ref weight, weight.Length+1);
+            Array.Resize<E> (ref outputVariables, outputVariables.Length+1);
+            fixHashCount();
+            return outputVariables.Length-1;
+        }
+
+        /// <summary>
+        /// Returns the number of hashes needed to accomidate the number of variables
+        /// </summary>
+        /// <returns></returns>
+        private int hashesNeeded()
+        {
+            return (int)Math.Ceiling(((double)outputVariables.Length) / 32) - HashCount;
+        }
+
+        /// <summary>
+        /// Increases the hash count on each of the allocated WFC_MUX_Hashs this mux has made
+        /// </summary>
+        private void increaseHashCount(int numHashIncrease)
+        {
+            foreach(WFC_MUX_Hash h in hashsMade)
+            {
+                h.allocateNewHashes(numHashIncrease);
+            }
+            hashesCount += numHashIncrease;
+        }
+
+        /// <summary>
+        /// increases the hashcount of each mux object to mach what is needed
+        /// </summary>
+        private void fixHashCount()
+        {
+            int newHashes = hashesNeeded();
+            increaseHashCount(newHashes);
         }
 
         #endregion
