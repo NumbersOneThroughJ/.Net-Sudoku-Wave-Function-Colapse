@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,8 +17,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
     internal class WFC_MUX_Hash
     {
         private static readonly int BITCOUNT = 32;
-        private UInt32[] hashs;
-        public readonly UInt32[] HASHES => hashs;
+        public UInt32[] hashs;
         
         /// <summary>
         /// alocates a list of integers for enough space for the amount of variables in the multiplexer
@@ -126,12 +126,13 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         private int hashesCount;
 
         public Boolean weighted;
+        private static readonly int BITCOUNT = 32;
 
         public int COUNT => outputVariables.Length;
         public int HashCount => hashesCount;
-        public int TOTALBITS => hashesCount * 32;
+        public int TOTALBITS => hashesCount * BITCOUNT;
 
-        private static readonly int[] binaryLocation = new int[] {
+        private static readonly UInt32[] binaryLocation = new UInt32[] {
             0b00000000000000000000000000000001,
             0b00000000000000000000000000000010,
             0b00000000000000000000000000000100,
@@ -180,7 +181,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             this.outputVariables = outputVariabls;
             this.weight = weight;
             outProbDict = outputVariabls.Zip(weight).ToDictionary(x => x.First, x => x.Second);
-            this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length)/32);
+            this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length)/BITCOUNT);
             this.valueIndexDict = new Dictionary<E, int>();
         }
 
@@ -194,7 +195,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             this.outputVariables = outProbDict.Keys.ToArray<E>();
             this.weight = outProbDict.Values.ToArray<int>();
             this.weighted = weighted;
-            this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length) / 32);
+            this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length) / BITCOUNT);
         }
         #endregion
 
@@ -210,19 +211,23 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         {
             WFC_MUX_Hash returnHash = new WFC_MUX_Hash(hashesCount);
             int index = -1;
-
+            int hashBitIndex = -1;
+            int hashIndex = -1;
 
             foreach(E e in source)
             {
                 index = bitIndexOf(e);
+                //Add a enum for mode, should add the value? or should throw error?
                 if (index == -1) throw new Exception
                     ("WFC_MUX_Hash does not contain a reference for the specified value: " + e.ToString());
+
                 //Stopping here, should the hash be calculated in the mux or in the hash object?
                 // I think the MUX should output hash objects. And that would prevent a hash object from being made outside of the mux.
+                hashBitIndex = index % BITCOUNT;
+                hashIndex = index / BITCOUNT;
 
+                returnHash.hashs[hashIndex] |= binaryLocation[hashBitIndex];
             }
-
-
 
             return returnHash;
         }
@@ -233,18 +238,26 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
 
             //Loop through the hash
             //Add a value for each bit found
-            //Honestly, prob just easiest to do an and statement 32 times
+            //Honestly, prob just easiest to do an and statement BITCOUNT times
             //would be less processing power too on the for loop
             //  I have a coding eating disorder. The overhead from a for loop is negligable XD
 
+            int hashBitIndex;
+            int hashIndex;
+
+
+
             for (int i = 0; i<outputVariables.Length; i++)
             {
-                int hashIndex = i / 32;
-                int hash = 0x0000;//Temp variable so I can write out my brain logic
-                if ((hash & binaryLocation[i%32]) == binaryLocation[i % 32])
-                {
-                    retList.Add(outputVariables[i]);
-                }
+                hashBitIndex = i % BITCOUNT;
+                hashIndex = i / BITCOUNT;
+
+                //int hashIndex = i / BITCOUNT;
+                //int hash = 0x0000;//Temp variable so I can write out my brain logic
+                //if ((hash & binaryLocation[i%BITCOUNT]) == binaryLocation[i % BITCOUNT])
+                //{
+                //    retList.Add(outputVariables[i]);
+                //}
             }
 
             return retList;
@@ -257,7 +270,13 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <returns></returns>
         public int bitIndexOf(E e)
         {
-            return valueIndexDict[e];
+            try
+            {
+                return valueIndexDict[e];
+            } catch (Exception ex)
+            {
+                return -1;
+            }
         }
 
         /// <summary>
@@ -293,7 +312,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <returns></returns>
         private int hashesNeeded()
         {
-            return (int)Math.Ceiling(((double)outputVariables.Length) / 32) - HashCount;
+            return (int)Math.Ceiling(((double)outputVariables.Length) / BITCOUNT) - HashCount;
         }
 
         /// <summary>
