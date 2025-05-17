@@ -35,6 +35,10 @@
             label2 = new Label();
             Start_Time_TxtBox = new TextBox();
             End_Time_TxtBox = new TextBox();
+            txtMUXIN = new TextBox();
+            txtMUXOUT = new TextBox();
+            label3 = new Label();
+            label4 = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             button1 = new Button();
             button2 = new Button();
@@ -82,15 +86,23 @@
             tableLayoutPanel2.Controls.Add(label2, 0, 3);
             tableLayoutPanel2.Controls.Add(Start_Time_TxtBox, 1, 1);
             tableLayoutPanel2.Controls.Add(End_Time_TxtBox, 1, 3);
+            tableLayoutPanel2.Controls.Add(txtMUXIN, 1, 5);
+            tableLayoutPanel2.Controls.Add(txtMUXOUT, 1, 7);
+            tableLayoutPanel2.Controls.Add(label3, 0, 5);
+            tableLayoutPanel2.Controls.Add(label4, 0, 7);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 44);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 5;
+            tableLayoutPanel2.RowCount = 9;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 1F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 1F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 88F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 1F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 1F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 76F));
             tableLayoutPanel2.Size = new Size(266, 406);
             tableLayoutPanel2.TabIndex = 1;
             // 
@@ -133,6 +145,44 @@
             End_Time_TxtBox.ReadOnly = true;
             End_Time_TxtBox.Size = new Size(160, 23);
             End_Time_TxtBox.TabIndex = 3;
+            // 
+            // txtMUXIN
+            // 
+            txtMUXIN.Dock = DockStyle.Fill;
+            txtMUXIN.Location = new Point(103, 55);
+            txtMUXIN.Name = "txtMUXIN";
+            txtMUXIN.ReadOnly = true;
+            txtMUXIN.Size = new Size(160, 23);
+            txtMUXIN.TabIndex = 4;
+            // 
+            // txtMUXOUT
+            // 
+            txtMUXOUT.Dock = DockStyle.Fill;
+            txtMUXOUT.Location = new Point(103, 79);
+            txtMUXOUT.Name = "txtMUXOUT";
+            txtMUXOUT.ReadOnly = true;
+            txtMUXOUT.Size = new Size(160, 23);
+            txtMUXOUT.TabIndex = 5;
+            // 
+            // label3
+            // 
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            label3.AutoSize = true;
+            label3.Location = new Point(49, 52);
+            label3.Name = "label3";
+            label3.Size = new Size(48, 20);
+            label3.TabIndex = 6;
+            label3.Text = "MUX IN";
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            label4.AutoSize = true;
+            label4.Location = new Point(37, 76);
+            label4.Name = "label4";
+            label4.Size = new Size(60, 20);
+            label4.TabIndex = 7;
+            label4.Text = "MUX OUT";
             // 
             // tableLayoutPanel1
             // 
@@ -201,5 +251,9 @@
         private Label label2;
         private TextBox Start_Time_TxtBox;
         private TextBox End_Time_TxtBox;
+        private TextBox txtMUXIN;
+        private TextBox txtMUXOUT;
+        private Label label3;
+        private Label label4;
     }
 }

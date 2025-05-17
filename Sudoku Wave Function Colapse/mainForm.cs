@@ -33,6 +33,15 @@ namespace Sudoku_Wave_Function_Colapse
             WaveFunctionCollapse = new WFC_Manager(getPossibles, finalValues);
 
             sudoku9x91.reset();
+
+
+            WFC_MUX<Char> MUXTEST = new WFC_MUX<Char>(
+                new Char[] { 'a', 'b', 'c', 'd' },
+                new int[] {1,1,1,1}
+                );
+            WFC_MUX_Hash hashTEST = MUXTEST.listToHash(new Char[] { 'a', 'b', 'c' });
+            txtMUXIN.Text = Convert.ToString(hashTEST.getHash(0), 2);
+            txtMUXOUT.Text = new String(MUXTEST.HashToList(hashTEST).ToArray());
             //Hardest sudoku Puzzle
             /*
             int[,] board =

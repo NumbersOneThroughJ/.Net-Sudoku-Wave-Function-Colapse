@@ -53,9 +53,14 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// </summary>
         /// <param name="hashIndex"></param>
         /// <param name="hash"></param>
-        public void setHash(UInt32 hashIndex, UInt32 hash)
+        public void setHash(int hashIndex, UInt32 hash)
         {
             hashs[hashIndex] = hash;
+        }
+
+        public UInt32 getHash(int hashIndex)
+        {
+            return hashs[hashIndex];
         }
 
         /// <summary>
@@ -125,7 +130,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         //Need a dictionary hash of E to index. This will speed up drastically.
         private int hashesCount;
 
-        public Boolean weighted;
+        //public Boolean weighted;
         private static readonly int BITCOUNT = 32;
 
         public int COUNT => outputVariables.Length;
@@ -180,22 +185,22 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         {
             this.outputVariables = outputVariabls;
             this.weight = weight;
-            outProbDict = outputVariabls.Zip(weight).ToDictionary(x => x.First, x => x.Second);
+            this.outProbDict = outputVariabls.Zip(weight).ToDictionary(x => x.First, x => x.Second);
+            this.valueIndexDict = outputVariables.Zip(Enumerable.Range(0, outputVariables.Length).ToArray()).ToDictionary(x => x.First, x => x.Second);
             this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length)/BITCOUNT);
-            this.valueIndexDict = new Dictionary<E, int>();
         }
 
         /// <summary>
         /// Constructs a mutltiplexer with the provided dictionary
         /// </summary>
         /// <param name="outProbDict">Dictionary of values and probabilities</param>
-        public WFC_MUX(Dictionary<E, int> outProbDict, bool weighted)
+        public WFC_MUX(Dictionary<E, int> outProbDict/*, bool weighted*/)
         {
             this.outProbDict = outProbDict;
             this.outputVariables = outProbDict.Keys.ToArray<E>();
             this.weight = outProbDict.Values.ToArray<int>();
-            this.weighted = weighted;
             this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length) / BITCOUNT);
+            this.valueIndexDict = outputVariables.Zip(Enumerable.Range(0, outputVariables.Length).ToArray()).ToDictionary(x => x.First, x => x.Second);
         }
         #endregion
 
@@ -207,7 +212,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// </summary>
         /// <param name="source"></param>
         /// <returns></returns>
-        private WFC_MUX_Hash listToHash(E[] source, bool weighted)
+        public WFC_MUX_Hash listToHash(E[] source/*, bool weighted*/)
         {
             WFC_MUX_Hash returnHash = new WFC_MUX_Hash(hashesCount);
             int index = -1;
@@ -232,7 +237,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             return returnHash;
         }
 
-        private List<E> HashToList(WFC_MUX_Hash h)
+        public List<E> HashToList(WFC_MUX_Hash h)
         {
             List<E> retList = new List<E>();
 
@@ -245,19 +250,16 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             int hashBitIndex;
             int hashIndex;
 
-
-
             for (int i = 0; i<outputVariables.Length; i++)
             {
                 hashBitIndex = i % BITCOUNT;
                 hashIndex = i / BITCOUNT;
+                UInt32 hash = h.getHash(hashIndex);
 
-                //int hashIndex = i / BITCOUNT;
-                //int hash = 0x0000;//Temp variable so I can write out my brain logic
-                //if ((hash & binaryLocation[i%BITCOUNT]) == binaryLocation[i % BITCOUNT])
-                //{
-                //    retList.Add(outputVariables[i]);
-                //}
+                if ((hash | binaryLocation[hashBitIndex]) == hash)
+                {
+                    retList.Add(outputVariables[i]);
+                }
             }
 
             return retList;
@@ -296,15 +298,28 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             // //Need a dictionary hash of E to index. This will speed up drastically.
             // private int hashesCount;
 
-            // //Stores the variable e to its index in output variables
-            valueIndexDict.Add(e, outputVariables.Length);
-            //Store the variable e to the weights table
+            if (bitIndexOf(e) != -1)
+            {
+                // //Stores the variable e to its index in output variables
+                valueIndexDict.Add(e, outputVariables.Length);
+                //Store the variable e to the weights table
+                Array.Resize<int>(ref weight, weight.Length + 1);
+                Array.Resize<E>(ref outputVariables, outputVariables.Length + 1);
+                fixHashCount();
+            }
             outProbDict.Add(e, newWeight);
-            Array.Resize<int> (ref weight, weight.Length+1);
-            Array.Resize<E> (ref outputVariables, outputVariables.Length+1);
-            fixHashCount();
             return outputVariables.Length-1;
         }
+        public int[] registerValues(E[] e, int[] Weights)
+        {
+            int[] indexes = new int[e.Length];
+            for (int i = 0; i< e.Length; i++)
+            {
+                indexes[i] = registerValue(e[i], Weights[i]);
+            }
+            return indexes;
+        }
+
 
         /// <summary>
         /// Returns the number of hashes needed to accomidate the number of variables
