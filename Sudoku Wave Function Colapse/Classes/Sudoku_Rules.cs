@@ -3,6 +3,7 @@ using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules;
 using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._2D;
 using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.ArrayRules;
 using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.ArrayRules._2D;
+using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace Sudoku_Wave_Function_Colapse.Classes
 {
     internal class Sudoku_Rules
     {
+        private static WFC_MUX<int> masterMUX = new WFC_MUX<int>(
+            new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
         private static Dictionary<int, IRuleBase> ruleFilters = new Dictionary<int, IRuleBase>()
         {
             //Entry

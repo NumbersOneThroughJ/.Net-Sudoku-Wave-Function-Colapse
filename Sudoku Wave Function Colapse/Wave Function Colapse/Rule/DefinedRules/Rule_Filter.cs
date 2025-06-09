@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -38,16 +39,16 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         public void reset() { }
 
         //Local variables
-        private List<int> softWhiteList;
-        private List<int> hardBlackList;
+        private WFC_MUX_Hash softWhiteList;
+        private WFC_MUX_Hash hardBlackList;
 
         //Constructors
-        public Rule_Filter()
-        {
-            softWhiteList = new List<int>();
-            hardBlackList = new List<int>();
-        }
-        public Rule_Filter(List<int> softWhiteList, List<int> hardBlackList)
+        //public Rule_Filter()
+        //{
+        //    softWhiteList = WFC_MUX_Hash();
+        //    hardBlackList = WFC_MUX_Hash();
+        //}
+        public Rule_Filter(WFC_MUX_Hash softWhiteList, WFC_MUX_Hash hardBlackList)
         {
             this.softWhiteList = softWhiteList;
             this.hardBlackList = hardBlackList;

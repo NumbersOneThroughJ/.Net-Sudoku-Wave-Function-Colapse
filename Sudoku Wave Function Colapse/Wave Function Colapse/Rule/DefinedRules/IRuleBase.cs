@@ -1,4 +1,5 @@
 ﻿using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules;
+using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
