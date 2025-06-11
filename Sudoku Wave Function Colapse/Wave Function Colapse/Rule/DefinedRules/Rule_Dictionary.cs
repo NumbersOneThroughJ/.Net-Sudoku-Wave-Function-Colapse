@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -14,20 +15,19 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
      */
     internal class Rule_Dictionary : IRuleBase
     {
-        //Interface Functions
+        #region Interface Functions
         public bool evaluate(int target)
         {
             return ruleLedger[target].evaluate(target);
         }
-
-        public List<int> evaluateReturnPossibleValues(int target)
+        public WFC_MUX_Hash evaluateReturnPossibleHash(int target)
         {
-            return ruleLedger[target].evaluateReturnPossibleValues(target);
+            return ruleLedger[target].evaluateReturnPossibleHash(target);
         }
 
-        public List<int> evaluateReturnNegativeValues(int target)
+        public WFC_MUX_Hash evaluateReturnNegativeHash(int target)
         {
-            return ruleLedger[target].evaluateReturnNegativeValues(target);
+            return ruleLedger[target].evaluateReturnNegativeHash(target);
         }
         Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target)
         {
@@ -35,12 +35,12 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
         }
 
         public void reset() { }
+        #endregion
 
-
-        //Local Variables
+        #region Local Variables
         Dictionary<int, IRuleBase> ruleLedger;
-
-        //Constructors
+        #endregion
+        #region Constructors
         public Rule_Dictionary()
         {
             ruleLedger = new Dictionary<int, IRuleBase>();
@@ -52,5 +52,6 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
             ruleLedger = new Dictionary<int, IRuleBase>();
             ruleLedger = IDs.Zip(Rules).ToDictionary();
         }
+        #endregion
     }
 }

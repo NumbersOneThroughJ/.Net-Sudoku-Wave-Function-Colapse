@@ -17,15 +17,18 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
     internal class WFC_MUX_Hash
     {
         private static readonly int BITCOUNT = 32;
+        private readonly WFC_MUX_Tracker tracker;
         public UInt32[] hashs;
-        
+
+        #region constructors
         /// <summary>
         /// alocates a list of integers for enough space for the amount of variables in the multiplexer
         /// </summary>
         /// <param name="multiplexer"></param>
-        public WFC_MUX_Hash(double COUNT)
+        public WFC_MUX_Hash(double COUNT, WFC_MUX_Tracker tracker)
         {
             hashs = new UInt32[(int)( Math.Ceiling( (COUNT)/(double)BITCOUNT))];
+            this.tracker = tracker;
         }
 
         /// <summary>
@@ -34,10 +37,18 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// USE AN MUX TO MAKE A HASH OTHERWISE
         /// </summary>
         /// <param name="numHashes"></param>
-        public WFC_MUX_Hash(UInt32 numHashes)
+        public WFC_MUX_Hash(UInt32 numHashes, WFC_MUX_Tracker tracker)
         {
             hashs = new UInt32[numHashes];
+            this.tracker = tracker;
         }
+
+        public WFC_MUX_Hash(WFC_MUX_Hash originalHash)
+        {
+            this.hashs = (UInt32[])originalHash.hashs.Clone();
+            this.tracker = originalHash.tracker;
+        }
+        #endregion
 
         /// <summary>
         /// Increases the hash count by the number requested
@@ -63,6 +74,21 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             return hashs[hashIndex];
         }
 
+        public WFC_MUX_Hash not()
+        {
+            WFC_MUX_Hash retHash = new WFC_MUX_Hash(this);
+            for (int i = 0; i < hashs.Length; i++)
+            {
+                retHash.hashs[i] = ~hashs[i];
+            }
+            return retHash;
+        }
+
+        public static WFC_MUX_Hash operator ~ (WFC_MUX_Hash hash)
+        {
+            return hash.not();
+        }
+
         /// <summary>
         /// Binary ands the two hash filters together
         /// </summary>
@@ -75,11 +101,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             {
                 throw new ArgumentException("Hash Capacities are different. Something went wrong","h1 capacity != h2 capacity");
             }
-            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1.hashs.Length);
+            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1);
 
             for (int i = 0; i<h1.hashs.Length; i++)
             {
-                resultHash.hashs[i] = h1.hashs[i] & h2.hashs[i];
+                resultHash.hashs[i] &= h2.hashs[i];
             }
 
             return resultHash;
@@ -97,15 +123,47 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             {
                 throw new ArgumentException("Hash Capacities are different. Something went wrong", "h1 capacity != h2 capacity");
             }
-            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1.hashs.Length);
+            WFC_MUX_Hash resultHash = new WFC_MUX_Hash(h1);
 
             for (int i = 0; i < h1.hashs.Length; i++)
             {
-                resultHash.hashs[i] = h1.hashs[i] | h2.hashs[i];
+                resultHash.hashs[i] |= h2.hashs[i];
             }
 
             return resultHash;
         }
+    }
+
+    /// <summary>
+    /// This class keeps track of the hashes themselves
+    /// This way we can increase hash counts and not worry about the generic typing that the MUX needs.
+    /// </summary>
+    internal class WFC_MUX_Tracker
+    {
+        private List<WFC_MUX_Hash> hashsMade;
+
+        public WFC_MUX_Tracker()
+        {
+            hashsMade = new List<WFC_MUX_Hash>();
+        }
+
+        #region functions
+        /// <summary>
+        /// Increases the hash count on each of the allocated WFC_MUX_Hashs this mux has made
+        /// </summary>
+        public void increaseHashCount(int numHashIncrease)
+        {
+            foreach (WFC_MUX_Hash h in hashsMade)
+            {
+                h.allocateNewHashes(numHashIncrease);
+            }
+        }
+
+        public void registerHash(WFC_MUX_Hash hash)
+        {
+            hashsMade.Add(hash);
+        }
+        #endregion
     }
 
     /// <summary>
@@ -124,11 +182,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// </summary>
         private E[] outputVariables;
         private int[] weight;
-        private List<WFC_MUX_Hash> hashsMade;
         private Dictionary<E, int> outProbDict;
         private Dictionary<E, int> valueIndexDict;
         //Need a dictionary hash of E to index. This will speed up drastically.
         private int hashesCount;
+        private WFC_MUX_Tracker hashes;
 
         //public Boolean weighted;
         private static readonly int BITCOUNT = 32;
@@ -188,6 +246,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             this.outProbDict = outputVariabls.Zip(weight).ToDictionary(x => x.First, x => x.Second);
             this.valueIndexDict = outputVariables.Zip(Enumerable.Range(0, outputVariables.Length).ToArray()).ToDictionary(x => x.First, x => x.Second);
             this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length)/BITCOUNT);
+            this.hashes = new WFC_MUX_Tracker();
         }
 
         /// <summary>
@@ -201,6 +260,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             this.weight = outProbDict.Values.ToArray<int>();
             this.hashesCount = (int)Math.Ceiling(((double)outputVariables.Length) / BITCOUNT);
             this.valueIndexDict = outputVariables.Zip(Enumerable.Range(0, outputVariables.Length).ToArray()).ToDictionary(x => x.First, x => x.Second);
+            this.hashes = new WFC_MUX_Tracker();
         }
         #endregion
 
@@ -214,7 +274,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// <returns></returns>
         public WFC_MUX_Hash listToHash(E[] source/*, bool weighted*/)
         {
-            WFC_MUX_Hash returnHash = new WFC_MUX_Hash(hashesCount);
+            WFC_MUX_Hash returnHash = new WFC_MUX_Hash(hashesCount, hashes);
             int index = -1;
             int hashBitIndex = -1;
             int hashIndex = -1;
@@ -228,6 +288,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
 
                 //Stopping here, should the hash be calculated in the mux or in the hash object?
                 // I think the MUX should output hash objects. And that would prevent a hash object from being made outside of the mux.
+                //WENT WITH THIS ONE/\
                 hashBitIndex = index % BITCOUNT;
                 hashIndex = index / BITCOUNT;
 
@@ -320,6 +381,12 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             return indexes;
         }
 
+        public WFC_MUX_Hash registerHash(E[] source)
+        {
+            WFC_MUX_Hash retHash = listToHash(source);
+            hashes.registerHash(retHash);
+            return retHash;
+        }
 
         /// <summary>
         /// Returns the number of hashes needed to accomidate the number of variables
@@ -335,10 +402,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
         /// </summary>
         private void increaseHashCount(int numHashIncrease)
         {
-            foreach(WFC_MUX_Hash h in hashsMade)
-            {
-                h.allocateNewHashes(numHashIncrease);
-            }
+            hashes.increaseHashCount(numHashIncrease);
             hashesCount += numHashIncrease;
         }
 
