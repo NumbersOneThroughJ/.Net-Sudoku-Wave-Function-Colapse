@@ -40,21 +40,21 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 return false;
             }
         }
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues, bool blacklistPriority = true)
         {
             if (andGate)
             {
                 foreach (IRule_2D_Base rule in rules)
                 {
-                    currentValues-=
-                        rule.getPossibleDataAboutPoint(p, data);
+                    currentValues.and(
+                        rule.getPossibleDataAboutPoint(p, data));
                 }
             } else
             {
                 foreach (IRule_2D_Base rule in rules)
                 {
-                    currentValues +=
-                        rule.getPossibleDataAboutPoint(p, data);
+                    currentValues.or(
+                        rule.getPossibleDataAboutPoint(p, data));
                 }
             }
             return currentValues;

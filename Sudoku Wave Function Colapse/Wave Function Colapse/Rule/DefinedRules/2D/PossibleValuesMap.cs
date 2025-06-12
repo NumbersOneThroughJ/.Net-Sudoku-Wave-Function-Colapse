@@ -21,6 +21,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         public PossibleValuesMap(int x, int y) 
         {
             map = new Rule_Filter[y, x];
+            for (int x1 = 0; x1<x; x1++) 
+                for (int y1 = 0; y1<y; y1++)
+                {
+                    map[y1,x1] = new Rule_Filter();
+                }
         }
 
         //Public Functions
@@ -67,10 +72,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         //}
 
         //Combines with BlackList Priority
-        public void and(Point p, Rule_Filter r) { map[p.Y,p.X] &= r; }
-        public void and(int x, int y, Rule_Filter r) { map[y, x] &= r; }
-        public void and(Point p, WFC_MUX_Hash negatives) { map[p.Y, p.X] -= negatives; }
-        public void and(int x, int y, WFC_MUX_Hash negatives) { map[y,x] -= negatives; }
+        public void and(Point p, Rule_Filter r) { map[p.Y,p.X].And(r); }
+        public void and(int x, int y, Rule_Filter r) { map[y, x].And(r); }
+        public void and(Point p, WFC_MUX_Hash negatives) { map[p.Y, p.X].Deny(negatives); }
+        public void and(int x, int y, WFC_MUX_Hash negatives) { map[y,x].Deny(negatives); }
         public void and(WFC_MUX_Hash[,] negatives)
         {
             for (int y = 0; y<negatives.GetLength(0); y++)
@@ -90,10 +95,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         public void and(PossibleValuesMap otherMap) { and(otherMap.map); }
 
         //Combines with WhiteList Priority
-        public void or(Point p, Rule_Filter r) { map[p.Y, p.X] |= r; }
-        public void or(int x, int y, Rule_Filter r) { map[y, x] |= r; }
-        public void or(Point p, WFC_MUX_Hash positives) { map[p.Y, p.X] += positives; }
-        public void or(int x, int y, WFC_MUX_Hash positives) { map[y, x] += positives; }
+        public void or(Point p, Rule_Filter r) { map[p.Y, p.X].Or(r); }
+        public void or(int x, int y, Rule_Filter r) { map[y, x].Or(r); }
+        public void or(Point p, WFC_MUX_Hash positives) { map[p.Y, p.X].Allow(positives); }
+        public void or(int x, int y, WFC_MUX_Hash positives) { map[y, x].Allow(positives); }
         public void or(WFC_MUX_Hash[,] positives)
         {
             for (int y = 0; y < positives.GetLength(0); y++)
@@ -110,6 +115,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                     or(x, y, rules[y, x]);
                 }
         }
+        public void or(PossibleValuesMap otherMap) { or(otherMap.map); }
 
         //Operators
         //Assumes two maps are of same length

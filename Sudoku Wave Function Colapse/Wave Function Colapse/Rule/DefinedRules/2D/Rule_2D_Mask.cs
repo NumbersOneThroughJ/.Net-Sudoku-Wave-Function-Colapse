@@ -58,7 +58,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
          * 
          * 
          */
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues, bool blacklistPriority = true)
         {
             Point dataRelativePoint = new Point();
             IRuleBase maskRelativeRule;

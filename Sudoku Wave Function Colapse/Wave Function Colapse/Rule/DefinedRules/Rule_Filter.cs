@@ -88,6 +88,41 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
             return this;
         }
 
+
+        //These should be used over the static operators. They will be faster.
+        /*Combines all lists within the two rule_Filters
+         * Adds all whitelisted items, then the blacklist takes the precident over the whitelist
+         * AND
+         */
+        public void And(Rule_Filter rule2)
+        {
+            if (rule2 == null) return;
+            softWhiteList &= rule2.softWhiteList;
+            hardBlackList &= rule2.hardBlackList;
+            softWhiteList &= ~hardBlackList;
+        }
+        public void  Deny(WFC_MUX_Hash blacklistHash)
+        {
+            hardBlackList &= blacklistHash;
+            softWhiteList &= ~hardBlackList;
+        }
+        /* Combines all lists within the two rule_Filters
+         *  Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
+         *  OR
+         */
+        public void  Or(Rule_Filter rule2)
+        {
+            if (rule2 == null) return;
+            softWhiteList &= rule2.softWhiteList;
+            hardBlackList &= rule2.hardBlackList;
+            hardBlackList &= ~softWhiteList;
+        }
+        public void  Allow(WFC_MUX_Hash whiteListHash)
+        {
+            whiteListHash &= whiteListHash;
+            hardBlackList &= ~softWhiteList;
+        }
+
         //quick functions
 
         /*Combines all lists within the two rule_Filters

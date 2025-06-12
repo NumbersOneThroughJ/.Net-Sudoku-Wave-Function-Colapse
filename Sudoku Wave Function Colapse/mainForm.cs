@@ -58,7 +58,7 @@ namespace Sudoku_Wave_Function_Colapse
                 { -1, 9, -1, -1, -1, -1, 4, -1, -1 },
             };
             sudoku9x91.setBoard(board);
-            
+
 
             /*
             int[,] board =
@@ -86,6 +86,7 @@ namespace Sudoku_Wave_Function_Colapse
 
         private int[,][] getPossibles(int[,] map)
         {
+            PossibleValuesMap possibles = new PossibleValuesMap(9,9);
             WFC_MUX_Hash[,] sourceMap = fullRuleSet.getFullTablePossibleData(map).getPossibleValuesAs2DArrOfHash();
             int[,][] retMap = new int[sourceMap.GetLength(0), sourceMap.GetLength(1)][];
 
@@ -111,8 +112,12 @@ namespace Sudoku_Wave_Function_Colapse
             defaults = sudoku9x91.getTableAlt();
             Start_Time_TxtBox.Text = System.DateTime.Now.ToString();
             int[,] mapValues = sudoku9x91.getTableAlt();
-            mapValues = WaveFunctionCollapse.CollapseFullMap(mapValues);
+            //mapValues = WaveFunctionCollapse.CollapseFullMap(mapValues);
+            mapValues = WaveFunctionCollapse.collapseTest(mapValues);
             sudoku9x91.setBoard(mapValues);
+            int[,][] vals = getPossibles(sudoku9x91.getTableAlt());
+            sudoku9x91.setAvailables(vals);
+            highlightMinimums(vals, sudoku9x91.getTableAlt());
             End_Time_TxtBox.Text = System.DateTime.Now.ToString();
         }
 

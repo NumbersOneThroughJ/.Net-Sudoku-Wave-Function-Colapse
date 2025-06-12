@@ -45,7 +45,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
             return rule.evaluatePoint(x, y, getSubSection(subsection, data));
         }
 
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues, bool blacklistPriority = true)
         {
             //[y,x]
             int y = p.Y;

@@ -25,12 +25,12 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
             return true;
         }
 
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues, bool blacklistPriority = true)
         {
             int setValue = data[p.Y, p.X];
             if (_ruleDic.Keys.Contains(setValue))
             {
-                currentValues += _ruleDic[setValue].getPossibleDataAboutPoint(p, data);
+                currentValues.or(_ruleDic[setValue].getPossibleDataAboutPoint(p, data));
             }
             return currentValues;
         }
