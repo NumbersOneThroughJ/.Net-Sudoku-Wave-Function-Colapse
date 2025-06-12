@@ -14,8 +14,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
 {
     internal class Sudoku_Rules
     {
-        private static WFC_MUX<int> masterMUX = new WFC_MUX<int>(
+        public static WFC_MUX<int> masterMUX = new WFC_MUX<int>(
             new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 });
+        private static WFC_MUX_Hash emptyHash = masterMUX.listToHash(new int[0]);
         private static Dictionary<int, IRuleBase> ruleFilters = new Dictionary<int, IRuleBase>()
         {
             //Entry
@@ -24,9 +25,11 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 1,
                 new Rule_Filter(
                     //WhiteList
-                    new List<int> {2,3,4,5,6,7,8,9},
+                    masterMUX.listToHash(new int[] {2,3,4,5,6,7,8,9}),
                     //BlackList
-                    new List<int> {1})
+                    masterMUX.listToHash(new int[] {1}),
+                    emptyHash
+                )
             },
             //Entry
             {
@@ -34,9 +37,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 2,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,3,4,5,6,7,8,9},
+                        masterMUX.listToHash(new int[]  {1,3,4,5,6,7,8,9}),
                         //BlackList
-                        new List<int> {2}
+                        masterMUX.listToHash(new int[]  {2})
                         )
                 },
             //Entry
@@ -44,9 +47,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 3,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,4,5,6,7,8,9},
+                        masterMUX.listToHash(new int[]  {1,2,4,5,6,7,8,9}),
                         //BlackList
-                        new List<int> {3}
+                        masterMUX.listToHash(new int[]  {3})
                         )
                 },
             //Entry
@@ -54,9 +57,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 4,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,3,5,6,7,8,9},
+                        masterMUX.listToHash(new int[]  {1,2,3,5,6,7,8,9}),
                         //BlackList
-                        new List<int> {4}
+                        masterMUX.listToHash(new int[]  {4})
                         )
                 },
             //Entry
@@ -64,19 +67,19 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 5,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,3,4,6,7,8,9},
+                        masterMUX.listToHash(new int[]  {1,2,3,4,6,7,8,9}),
                         //BlackList
-                        new List<int> {5}
+                        masterMUX.listToHash(new int[]  {5})
                         )
-            },
+                },
             //Entry
             {
                 6,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,3,4,5,7,8,9},
+                        masterMUX.listToHash(new int[]  {1,2,3,4,5,7,8,9}),
                         //BlackList
-                        new List<int> {6}
+                        masterMUX.listToHash(new int[]  {6})
                         )
             },
             //Entry
@@ -84,9 +87,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 7,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,3,4,5,6,8,9},
+                        masterMUX.listToHash(new int[]  {1,2,3,4,5,6,8,9}),
                         //BlackList
-                        new List<int> {7}
+                        masterMUX.listToHash(new int[]  {7})
                         )
             },
             //Entry
@@ -94,9 +97,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 8,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,3,4,5,6,7,9},
+                        masterMUX.listToHash(new int[]  {1,2,3,4,5,6,7,9}),
                         //BlackList
-                        new List<int> {8}
+                        masterMUX.listToHash(new int[]  {8})
                         )
             },
             //Entry
@@ -104,9 +107,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 9,
                 new Rule_Filter(
                         //WhiteList
-                        new List<int> {1,2,3,4,5,6,7,8},
+                        masterMUX.listToHash(new int[]  {1,2,3,4,5,6,7,8}),
                         //BlackList
-                        new List<int> {9}
+                        masterMUX.listToHash(new int[]  {9})
                         )
             },
             //Entry
@@ -114,9 +117,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 0,
                 new Rule_Filter(
                     //WhiteList
-                    new List<int> {1,2,3,4,5,6,7,8,9},
+                    masterMUX.listToHash(new int[]  {1,2,3,4,5,6,7,8,9}),
                     //BlackList
-                    new List<int> {}
+                    masterMUX.listToHash(new int[]  {})
                     )
             }
             ,
@@ -125,9 +128,9 @@ namespace Sudoku_Wave_Function_Colapse.Classes
                 -1,
                 new Rule_Filter(
                     //WhiteList
-                    new List<int> {1,2,3,4,5,6,7,8,9},
+                    masterMUX.listToHash(new int[]  {1,2,3,4,5,6,7,8,9}),
                     //BlackList
-                    new List<int> {}
+                    masterMUX.listToHash(new int[]  {})
                     )
             }
         };

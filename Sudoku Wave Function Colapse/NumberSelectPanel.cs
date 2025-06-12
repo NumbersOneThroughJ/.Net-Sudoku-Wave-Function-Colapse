@@ -41,7 +41,7 @@ namespace Sudoku_Wave_Function_Colapse
         //Event to resize fonts
         private void NumberSelectPanel_Resize(object sender, EventArgs e)
         {
-            FontSizer.resizeTargetsFont();
+            //FontSizer.resizeTargetsFont();
         }
 
         private NumberButton getButton(int index)

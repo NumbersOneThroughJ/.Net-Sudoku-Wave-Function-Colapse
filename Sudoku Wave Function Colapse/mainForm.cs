@@ -19,6 +19,7 @@ namespace Sudoku_Wave_Function_Colapse
 
         static int[] finalValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
         private int[,] defaults;
+        
 
         public mainForm()
         {
@@ -43,7 +44,7 @@ namespace Sudoku_Wave_Function_Colapse
             txtMUXIN.Text = Convert.ToString(hashTEST.getHash(0), 2);
             txtMUXOUT.Text = new String(MUXTEST.HashToList(hashTEST).ToArray());
             //Hardest sudoku Puzzle
-            /*
+            
             int[,] board =
             {
                 { 8, -1, -1, -1, -1, -1, -1, -1, -1 },
@@ -56,8 +57,8 @@ namespace Sudoku_Wave_Function_Colapse
                 { -1, -1, 8, 5, -1, -1, -1, 1, -1 },
                 { -1, 9, -1, -1, -1, -1, 4, -1, -1 },
             };
-            sudoku9x91.setBoard(board
-            */
+            sudoku9x91.setBoard(board);
+            
 
             /*
             int[,] board =
@@ -85,7 +86,17 @@ namespace Sudoku_Wave_Function_Colapse
 
         private int[,][] getPossibles(int[,] map)
         {
-            return fullRuleSet.getFullTablePossibleData(map).getPossibleValuesAs2DArrOfArrs();
+            WFC_MUX_Hash[,] sourceMap = fullRuleSet.getFullTablePossibleData(map).getPossibleValuesAs2DArrOfHash();
+            int[,][] retMap = new int[sourceMap.GetLength(0), sourceMap.GetLength(1)][];
+
+            for(int x = 0; x < retMap.GetLength(0); x++) 
+                for(int y =0; y< retMap.GetLength(1); y++)
+                {
+                    retMap[x,y] = Sudoku_Rules.masterMUX.HashToList(sourceMap[x,y]).ToArray();
+                }
+
+
+            return retMap;
         }
 
         public void InvokeUpdate(object sender, bool e)

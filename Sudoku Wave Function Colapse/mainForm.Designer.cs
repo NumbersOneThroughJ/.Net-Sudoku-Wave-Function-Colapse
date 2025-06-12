@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            sudoku9x91 = new Sudoku9x9();
             splitContainer1 = new SplitContainer();
             tableLayoutPanel2 = new TableLayoutPanel();
             label1 = new Label();
@@ -42,6 +41,7 @@
             tableLayoutPanel1 = new TableLayoutPanel();
             button1 = new Button();
             button2 = new Button();
+            sudoku9x91 = new Sudoku9x9();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
@@ -49,15 +49,6 @@
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
-            // 
-            // sudoku9x91
-            // 
-            sudoku9x91.Dock = DockStyle.Fill;
-            sudoku9x91.Location = new Point(0, 0);
-            sudoku9x91.Name = "sudoku9x91";
-            sudoku9x91.Size = new Size(530, 450);
-            sudoku9x91.TabIndex = 0;
-            sudoku9x91.NeedUpdate += InvokeUpdate;
             // 
             // splitContainer1
             // 
@@ -74,7 +65,7 @@
             // 
             splitContainer1.Panel2.Controls.Add(sudoku9x91);
             splitContainer1.Size = new Size(800, 450);
-            splitContainer1.SplitterDistance = 266;
+            splitContainer1.SplitterDistance = 265;
             splitContainer1.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -103,7 +94,7 @@
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 1F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 5F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 76F));
-            tableLayoutPanel2.Size = new Size(266, 406);
+            tableLayoutPanel2.Size = new Size(265, 406);
             tableLayoutPanel2.TabIndex = 1;
             // 
             // label1
@@ -134,7 +125,7 @@
             Start_Time_TxtBox.Location = new Point(103, 7);
             Start_Time_TxtBox.Name = "Start_Time_TxtBox";
             Start_Time_TxtBox.ReadOnly = true;
-            Start_Time_TxtBox.Size = new Size(160, 23);
+            Start_Time_TxtBox.Size = new Size(159, 23);
             Start_Time_TxtBox.TabIndex = 2;
             // 
             // End_Time_TxtBox
@@ -143,7 +134,7 @@
             End_Time_TxtBox.Location = new Point(103, 31);
             End_Time_TxtBox.Name = "End_Time_TxtBox";
             End_Time_TxtBox.ReadOnly = true;
-            End_Time_TxtBox.Size = new Size(160, 23);
+            End_Time_TxtBox.Size = new Size(159, 23);
             End_Time_TxtBox.TabIndex = 3;
             // 
             // txtMUXIN
@@ -152,7 +143,7 @@
             txtMUXIN.Location = new Point(103, 55);
             txtMUXIN.Name = "txtMUXIN";
             txtMUXIN.ReadOnly = true;
-            txtMUXIN.Size = new Size(160, 23);
+            txtMUXIN.Size = new Size(159, 23);
             txtMUXIN.TabIndex = 4;
             // 
             // txtMUXOUT
@@ -161,7 +152,7 @@
             txtMUXOUT.Location = new Point(103, 79);
             txtMUXOUT.Name = "txtMUXOUT";
             txtMUXOUT.ReadOnly = true;
-            txtMUXOUT.Size = new Size(160, 23);
+            txtMUXOUT.Size = new Size(159, 23);
             txtMUXOUT.TabIndex = 5;
             // 
             // label3
@@ -178,9 +169,9 @@
             // 
             label4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
             label4.AutoSize = true;
-            label4.Location = new Point(37, 76);
+            label4.Location = new Point(38, 76);
             label4.Name = "label4";
-            label4.Size = new Size(60, 20);
+            label4.Size = new Size(59, 20);
             label4.TabIndex = 7;
             label4.Text = "MUX OUT";
             // 
@@ -196,7 +187,7 @@
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(266, 44);
+            tableLayoutPanel1.Size = new Size(265, 44);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // button1
@@ -204,7 +195,7 @@
             button1.Dock = DockStyle.Fill;
             button1.Location = new Point(3, 3);
             button1.Name = "button1";
-            button1.Size = new Size(127, 38);
+            button1.Size = new Size(126, 38);
             button1.TabIndex = 0;
             button1.Text = "Solve Board";
             button1.UseVisualStyleBackColor = true;
@@ -213,13 +204,22 @@
             // button2
             // 
             button2.Dock = DockStyle.Fill;
-            button2.Location = new Point(136, 3);
+            button2.Location = new Point(135, 3);
             button2.Name = "button2";
             button2.Size = new Size(127, 38);
             button2.TabIndex = 1;
             button2.Text = "Undo Solve";
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
+            // 
+            // sudoku9x91
+            // 
+            sudoku9x91.Dock = DockStyle.Fill;
+            sudoku9x91.Location = new Point(0, 0);
+            sudoku9x91.Name = "sudoku9x91";
+            sudoku9x91.Size = new Size(531, 450);
+            sudoku9x91.TabIndex = 0;
+            sudoku9x91.NeedUpdate += InvokeUpdate;
             // 
             // mainForm
             // 

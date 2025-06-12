@@ -18,6 +18,8 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
     internal class Rule_Filter : IRuleBase
     {
 
+
+
         #region Interface Functions
         //As long as the values are not blacklisted, will return true
         public bool evaluate(int target)
@@ -43,21 +45,34 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         #region Local variables
         private WFC_MUX_Hash softWhiteList;
         private WFC_MUX_Hash hardBlackList;
+        public static WFC_MUX_Hash emptyHash;
         #endregion
 
         #region Constructors
-        //public Rule_Filter()
-        //{
-        //    softWhiteList = WFC_MUX_Hash();
-        //    hardBlackList = WFC_MUX_Hash();
-        //}
+        public Rule_Filter()
+        {
+            softWhiteList = new WFC_MUX_Hash(~emptyHash);
+            hardBlackList = new WFC_MUX_Hash(emptyHash);
+        }
         public Rule_Filter(WFC_MUX_Hash softWhiteList, WFC_MUX_Hash hardBlackList)
         {
             this.softWhiteList = softWhiteList;
             this.hardBlackList = hardBlackList;
         }
+        public Rule_Filter(WFC_MUX_Hash softWhiteList, WFC_MUX_Hash hardBlackList, WFC_MUX_Hash emptyHash)
+        {
+            this.softWhiteList = softWhiteList;
+            this.hardBlackList = hardBlackList;
+            Rule_Filter.emptyHash = emptyHash;
+        }
         public Rule_Filter(Rule_Filter filter)
         {
+            if (filter == null)
+            {
+                softWhiteList = new WFC_MUX_Hash(~emptyHash);
+                hardBlackList = new WFC_MUX_Hash(emptyHash);
+                return;
+            }
             this.softWhiteList = filter.softWhiteList;
             this.hardBlackList = filter.hardBlackList;
         }
@@ -81,6 +96,9 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
          */
         public static Rule_Filter operator & (Rule_Filter rule1, Rule_Filter rule2)
         {
+            if ((rule2 == null) && (rule1 == null)) return new Rule_Filter();
+            if (rule2 == null) return new Rule_Filter(rule1);
+            if (rule1 == null) return new Rule_Filter(rule2);
             Rule_Filter returnRule = new Rule_Filter(rule1.softWhiteList & rule2.softWhiteList,rule1.hardBlackList & rule2.hardBlackList);
             returnRule.softWhiteList &= ~returnRule.hardBlackList;
             return returnRule;
@@ -96,8 +114,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
          *  Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
          *  OR
          */
-        public static Rule_Filter operator + (Rule_Filter rule1, Rule_Filter rule2)
+        public static Rule_Filter operator |(Rule_Filter rule1, Rule_Filter rule2)
         {
+            if ((rule2 == null) && (rule1 == null)) return new Rule_Filter();
+            if (rule2 == null) return new Rule_Filter(rule1);
+            if (rule1 == null) return new Rule_Filter(rule2);
             Rule_Filter returnRule = new Rule_Filter(rule1.softWhiteList & rule2.softWhiteList, rule1.hardBlackList & rule2.hardBlackList);
             returnRule.hardBlackList &= ~returnRule.softWhiteList;
             return returnRule;

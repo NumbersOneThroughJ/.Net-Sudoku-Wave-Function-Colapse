@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,12 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
             throw new NotImplementedException();
         }
 
-        public List<int> evaluateReturnNegativeValues(int target)
+        public WFC_MUX_Hash evaluateReturnNegativeHash(int target)
         {
             throw new NotImplementedException();
         }
 
-        public List<int> evaluateReturnPossibleValues(int target)
+        public WFC_MUX_Hash evaluateReturnPossibleHash(int target)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._2D
 {
+    /// <summary>
+    /// PLAN TO REPLACE THIS
+    /// Will need to use hashes instead of using lists of ints
+    /// </summary>
+
     internal class PossibleValuesMap
     {
         //Local Variables
@@ -23,49 +29,49 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
             return map[y,x];
         }
         public Rule_Filter getValuesAsRule(Point point) { return getValuesAsRule(point.X, point.Y); }
-        public List<int> getPossibleValuesForPoint(int x, int y) { return getValuesAsRule(x,y).evaluateReturnPossibleValues(0); }
-        public List<int>[,] getPossibleValuesAs2DArrofLists()
+        public WFC_MUX_Hash getPossibleHashForPoint(int x, int y) { return getValuesAsRule(x,y).evaluateReturnPossibleHash(0); }
+        //public List<int>[,] getPossibleValuesAs2DArrofLists()
+        //{
+        //    List<int>[,] returnArr = new List<int>[map.GetLength(0), map.GetLength(1)];
+        //    for(int y = 0; y<map.GetLength(0); y++)
+        //        for(int x = 0; x<map.GetLength(1); x++)
+        //        {
+        //            returnArr[y, x] = getPossibleValuesForPoint(x, y);
+        //        }
+        //    return returnArr;
+        //}
+        public WFC_MUX_Hash[,] getPossibleValuesAs2DArrOfHash()
         {
-            List<int>[,] returnArr = new List<int>[map.GetLength(0), map.GetLength(1)];
-            for(int y = 0; y<map.GetLength(0); y++)
-                for(int x = 0; x<map.GetLength(1); x++)
-                {
-                    returnArr[y, x] = getPossibleValuesForPoint(x, y);
-                }
-            return returnArr;
-        }
-        public int[,][] getPossibleValuesAs2DArrOfArrs()
-        {
-            int[,][] returnArr = new int[map.GetLength(0),map.GetLength(1)][];
+            WFC_MUX_Hash[,] returnArr = new WFC_MUX_Hash[map.GetLength(0),map.GetLength(1)];
             for (int y = 0; y < map.GetLength(0); y++)
             {
                 for (int x = 0; x < map.GetLength(1); x++)
                 {
-                    returnArr[y, x] = getPossibleValuesForPoint(x, y).ToArray();
+                    returnArr[y, x] = getPossibleHashForPoint(x, y);
                 }
             }
             return returnArr;
         }
-        public int[][][] getPossibleValuesAsArrOfArrOfArrs()
-        {
-            int[][][] returnArr = new int[map.GetLength(0)][][];
-            for (int y = 0; y < map.GetLength(0); y++)
-            {
-                returnArr[y] = new int[map.GetLength(1)][];
-                for (int x = 0; x < map.GetLength(1); x++)
-                {
-                    returnArr[y][x] = getPossibleValuesForPoint(x, y).ToArray();
-                }
-            }
-            return returnArr;
-        }
+        //public int[][][] getPossibleValuesAsArrOfArrOfArrs()
+        //{
+        //    int[][][] returnArr = new int[map.GetLength(0)][][];
+        //    for (int y = 0; y < map.GetLength(0); y++)
+        //    {
+        //        returnArr[y] = new int[map.GetLength(1)][];
+        //        for (int x = 0; x < map.GetLength(1); x++)
+        //        {
+        //            returnArr[y][x] = getPossibleValuesForPoint(x, y).ToArray();
+        //        }
+        //    }
+        //    return returnArr;
+        //}
 
         //Combines with BlackList Priority
-        public void and(Point p, Rule_Filter r) { map[p.Y,p.X] -= r; }
-        public void and(int x, int y, Rule_Filter r) { map[y,x] -= r; }
-        public void and(Point p, List<int> negatives) { map[p.Y, p.X] -= negatives; }
-        public void and(int x, int y, List<int> negatives) { map[y,x] -= negatives; }
-        public void and(List<int>[,] negatives)
+        public void and(Point p, Rule_Filter r) { map[p.Y,p.X] &= r; }
+        public void and(int x, int y, Rule_Filter r) { map[y, x] &= r; }
+        public void and(Point p, WFC_MUX_Hash negatives) { map[p.Y, p.X] -= negatives; }
+        public void and(int x, int y, WFC_MUX_Hash negatives) { map[y,x] -= negatives; }
+        public void and(WFC_MUX_Hash[,] negatives)
         {
             for (int y = 0; y<negatives.GetLength(0); y++)
                 for(int x = 0; x<negatives.GetLength(1); x++)
@@ -84,11 +90,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         public void and(PossibleValuesMap otherMap) { and(otherMap.map); }
 
         //Combines with WhiteList Priority
-        public void or(Point p, Rule_Filter r) { map[p.Y, p.X] += r; }
-        public void or(int x, int y, Rule_Filter r) { map[y,x] += r; }
-        public void or(Point p, List<int> positives) { map[p.Y, p.X] += positives; }
-        public void or(int x, int y, List<int> positives) { map[y, x] += positives; }
-        public void or(List<int>[,] positives)
+        public void or(Point p, Rule_Filter r) { map[p.Y, p.X] |= r; }
+        public void or(int x, int y, Rule_Filter r) { map[y, x] |= r; }
+        public void or(Point p, WFC_MUX_Hash positives) { map[p.Y, p.X] += positives; }
+        public void or(int x, int y, WFC_MUX_Hash positives) { map[y, x] += positives; }
+        public void or(WFC_MUX_Hash[,] positives)
         {
             for (int y = 0; y < positives.GetLength(0); y++)
                 for (int x = 0; x < positives.GetLength(1); x++)
