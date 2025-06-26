@@ -15,7 +15,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
      * When given a value, if that value is not on the deny list, it is allowed.
      * When asking for a potential value, it will return its suggestive whitelist
      */
-    internal class Rule_Filter : IRuleBase
+    internal class Rule_Filter : IRuleBase, ICloneable
     {
 
 
@@ -121,6 +121,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         {
             whiteListHash &= whiteListHash;
             hardBlackList &= ~softWhiteList;
+        }
+
+        public object Clone()
+        {
+            return new Rule_Filter(this);
         }
 
         //quick functions

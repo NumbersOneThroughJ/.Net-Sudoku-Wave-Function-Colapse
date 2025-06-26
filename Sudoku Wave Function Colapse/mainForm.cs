@@ -9,12 +9,12 @@ namespace Sudoku_Wave_Function_Colapse
 {
     public partial class mainForm : Form
     {
-        private IRule_2D_Base collumDivider;
-        private IRule_2D_Base SudokuSingleSquareRule;
-        private IRule_2D_Base SudokuVerticalRule;
-        private IRule_2D_Base SudokuHorizontalRule;
+        private ARule_2D_Base collumDivider;
+        private ARule_2D_Base SudokuSingleSquareRule;
+        private ARule_2D_Base SudokuVerticalRule;
+        private ARule_2D_Base SudokuHorizontalRule;
 
-        private IRule_2D_Base fullRuleSet;
+        private ARule_2D_Base fullRuleSet;
         WFC_Manager WaveFunctionCollapse;
 
         static int[] finalValues = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -26,10 +26,10 @@ namespace Sudoku_Wave_Function_Colapse
             InitializeComponent();
 
             collumDivider = new Rule_2D_AxisDivider(3, true, Sudoku_Rules.makeDictionaryOfSquareMasks());
-            SudokuSingleSquareRule = new Rule_2D_AxisDivider(3, false, (IRule_2D_Base)collumDivider);
+            SudokuSingleSquareRule = new Rule_2D_AxisDivider(3, false, (ARule_2D_Base)collumDivider);
             SudokuVerticalRule = Sudoku_Rules.makeVerticalDictionaryOfMasks();
             SudokuHorizontalRule = Sudoku_Rules.makeHorizontalDictionaryOfMasks();
-            fullRuleSet = new Rule_2D_Set(new List<IRule_2D_Base> { SudokuSingleSquareRule, SudokuVerticalRule, SudokuHorizontalRule }, true);
+            fullRuleSet = new Rule_2D_Set(new List<ARule_2D_Base> { SudokuSingleSquareRule, SudokuVerticalRule, SudokuHorizontalRule }, true);
 
             WaveFunctionCollapse = new WFC_Manager(getPossibles, finalValues);
 
@@ -44,7 +44,8 @@ namespace Sudoku_Wave_Function_Colapse
             txtMUXIN.Text = Convert.ToString(hashTEST.getHash(0), 2);
             txtMUXOUT.Text = new String(MUXTEST.HashToList(hashTEST).ToArray());
             //Hardest sudoku Puzzle
-            
+
+            /*
             int[,] board =
             {
                 { 8, -1, -1, -1, -1, -1, -1, -1, -1 },
@@ -60,7 +61,6 @@ namespace Sudoku_Wave_Function_Colapse
             sudoku9x91.setBoard(board);
 
 
-            /*
             int[,] board =
             {
                 {-1, -1, -1, 8, -1, -1, -1, 6, -1 },

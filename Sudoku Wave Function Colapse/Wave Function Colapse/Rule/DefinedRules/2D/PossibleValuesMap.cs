@@ -1,7 +1,9 @@
 ﻿using Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,19 +14,33 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
     /// Will need to use hashes instead of using lists of ints
     /// </summary>
 
-    internal class PossibleValuesMap
+    internal class PossibleValuesMap : ICloneable
     {
         //Local Variables
         public Rule_Filter[,] map;
 
         //Constructors
-        public PossibleValuesMap(int x, int y) 
+        
+        public PossibleValuesMap(int x, int y, Boolean init = true) 
         {
             map = new Rule_Filter[y, x];
-            for (int x1 = 0; x1<x; x1++) 
-                for (int y1 = 0; y1<y; y1++)
+            if (init)
+            {
+                for (int x1 = 0; x1 < x; x1++)
+                    for (int y1 = 0; y1 < y; y1++)
+                    {
+                        map[y1, x1] = new Rule_Filter();
+                    }
+            }
+        }
+
+        public PossibleValuesMap(PossibleValuesMap m)
+        {
+            map = new Rule_Filter[m.map.GetLength(0), m.map.GetLength(1)];
+            for (int x1 = 0; x1 < m.map.GetLength(1); x1++)
+                for (int y1 = 0; y1 < m.map.GetLength(0); y1++)
                 {
-                    map[y1,x1] = new Rule_Filter();
+                    map[y1, x1] = new Rule_Filter(m.map[y1, x1]);
                 }
         }
 
@@ -117,6 +133,17 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         }
         public void or(PossibleValuesMap otherMap) { or(otherMap.map); }
 
+        public object Clone()
+        {
+            Rule_Filter[,] r = new Rule_Filter[map.GetLength(0), map.GetLength(1)];
+            for (int y = 0; y < map.GetLength(1); y++)
+                for (int x = 0; x<map.GetLength(0); x++)
+                {
+                    r[y,x] = (Rule_Filter)map[y,x].Clone();
+                }
+            return r;
+        }
+
         //Operators
         //Assumes two maps are of same length
         public static PossibleValuesMap operator -(PossibleValuesMap map1,  PossibleValuesMap map2)
@@ -136,6 +163,20 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
             result.or(map2.map);
 
             return result;
+        }
+    }
+
+    internal class PossibleValuesMap_SubSection : PossibleValuesMap
+    {
+        public PossibleValuesMap_SubSection(PossibleValuesMap original, int colStart, int rowStart, int colEnd, int rowEnd)
+            : base(colEnd - colStart, rowEnd - rowStart, false)
+        {
+            map = new Rule_Filter[rowEnd - rowStart, colEnd - colStart];
+            for (int x1 = colStart; x1 < colEnd; x1++)
+                for (int y1 = rowStart; y1 < rowEnd; y1++)
+                {
+                    map[y1, x1] = original.map[y1,x1];
+                }
         }
     }
 }
