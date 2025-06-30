@@ -21,39 +21,39 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         }
 
         //Interface Functions
-        public bool evaluatePoint(Point p, int[,] data)
+        public bool evaluatePoint(int x, int y, int[,] data)
         {
             if(andMode)
             {
                 foreach(ARule_2D_Base rule in rules)
                 {
-                    if (!rule.evaluatePoint(p, data)) return false;
+                    if (!rule.evaluatePoint(x,y, data)) return false;
                 }
                 return true;
             } else
             {
                 foreach(ARule_2D_Base rule in rules)
                 {
-                    if(rule.evaluatePoint(p, data)) return true;
+                    if(rule.evaluatePoint(x,y, data)) return true;
                 }
                 return false;
             }
         }
-        public override void ApplyPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public override void ApplyPossibleDataAboutPoint(int x, int y, int[,] data, PossibleValuesMap currentValues)
         {
             if (andMode)
             {
                 foreach (ARule_2D_Base rule in rules)
                 {
                     currentValues.and(
-                        rule.ApplyPossibleDataAboutPoint(p, data, currentValues));
+                        rule.ApplyPossibleDataAboutPoint(x,y, data, currentValues));
                 }
             } else
             {
                 foreach (ARule_2D_Base rule in rules)
                 {
                     currentValues.or(
-                        rule.ApplyPossibleDataAboutPoint(p, data, currentValues));
+                        rule.ApplyPossibleDataAboutPoint(x,y, data, currentValues));
                 }
             }
         }

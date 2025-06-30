@@ -19,8 +19,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         //Local Variables
         public Rule_Filter[,] map;
 
-        //Constructors
-        
+        #region Constructors
         public PossibleValuesMap(int x, int y, Boolean init = true) 
         {
             map = new Rule_Filter[y, x];
@@ -44,7 +43,13 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 }
         }
 
-        //Public Functions
+        protected PossibleValuesMap()
+        {
+            map = null;
+        }
+        #endregion
+
+        #region Public Functions
         public Rule_Filter getValuesAsRule(int x, int y)
         {
             return map[y,x];
@@ -88,9 +93,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         //}
 
         //Combines with BlackList Priority
-        public void and(Point p, Rule_Filter r) { map[p.Y,p.X].And(r); }
+        #region Logical And
+        //public void and(Point p, Rule_Filter r) { map[p.Y,p.X].And(r); }
         public void and(int x, int y, Rule_Filter r) { map[y, x].And(r); }
-        public void and(Point p, WFC_MUX_Hash negatives) { map[p.Y, p.X].Deny(negatives); }
+        //public void and(Point p, WFC_MUX_Hash negatives) { map[p.Y, p.X].Deny(negatives); }
         public void and(int x, int y, WFC_MUX_Hash negatives) { map[y,x].Deny(negatives); }
         public void and(WFC_MUX_Hash[,] negatives)
         {
@@ -109,11 +115,12 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 }
         }
         public void and(PossibleValuesMap otherMap) { and(otherMap.map); }
-
+        #endregion
+        #region logical Or
         //Combines with WhiteList Priority
-        public void or(Point p, Rule_Filter r) { map[p.Y, p.X].Or(r); }
+        //public void or(Point p, Rule_Filter r) { map[p.Y, p.X].Or(r); }
         public void or(int x, int y, Rule_Filter r) { map[y, x].Or(r); }
-        public void or(Point p, WFC_MUX_Hash positives) { map[p.Y, p.X].Allow(positives); }
+        //public void or(Point p, WFC_MUX_Hash positives) { map[p.Y, p.X].Allow(positives); }
         public void or(int x, int y, WFC_MUX_Hash positives) { map[y, x].Allow(positives); }
         public void or(WFC_MUX_Hash[,] positives)
         {
@@ -132,7 +139,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 }
         }
         public void or(PossibleValuesMap otherMap) { or(otherMap.map); }
-
+        #endregion
         public object Clone()
         {
             Rule_Filter[,] r = new Rule_Filter[map.GetLength(0), map.GetLength(1)];
@@ -143,10 +150,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 }
             return r;
         }
-
-        //Operators
+        #endregion
+        #region operators
         //Assumes two maps are of same length
-        public static PossibleValuesMap operator -(PossibleValuesMap map1,  PossibleValuesMap map2)
+        public static PossibleValuesMap operator |(PossibleValuesMap map1,  PossibleValuesMap map2)
         {
             PossibleValuesMap result = new PossibleValuesMap(map1.map.GetLength(1), map1.map.GetLength(0));
 
@@ -155,7 +162,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
 
             return result;
         }
-        public static PossibleValuesMap operator +(PossibleValuesMap map1, PossibleValuesMap map2)
+        public static PossibleValuesMap operator &(PossibleValuesMap map1, PossibleValuesMap map2)
         {
             PossibleValuesMap result = new PossibleValuesMap(map1.map.GetLength(1), map1.map.GetLength(0));
 
@@ -164,19 +171,50 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
 
             return result;
         }
+        #endregion
     }
 
+    /// <summary>
+    /// Defines a subsection of the possibleValuesMap
+    /// The start and end are inclusive.
+    /// </summary>
     internal class PossibleValuesMap_SubSection : PossibleValuesMap
     {
-        public PossibleValuesMap_SubSection(PossibleValuesMap original, int colStart, int rowStart, int colEnd, int rowEnd)
-            : base(colEnd - colStart, rowEnd - rowStart, false)
+        #region variables
+        #region private
+        private int 
+            colStart, colEnd, numCol,
+            rowStart, rowEnd, numRow,
+            subSectionXCount, subSectionYCount;
+        #endregion
+        #region readonly Access Variables
+        public int MAX_X => subSectionXCount;
+        public int MAX_Y => subSectionYCount;
+        #endregion
+        #endregion
+
+        #region Contstructors
+        public PossibleValuesMap_SubSection(PossibleValuesMap original, int numCol, int numRow)
         {
-            map = new Rule_Filter[rowEnd - rowStart, colEnd - colStart];
-            for (int x1 = colStart; x1 < colEnd; x1++)
-                for (int y1 = rowStart; y1 < rowEnd; y1++)
-                {
-                    map[y1, x1] = original.map[y1,x1];
-                }
+            map = original.map;
+            this.numCol = numCol;
+            this.numRow = numRow;
+            subSectionXCount = (int)Math.Ceiling((double)map.GetLength(1) / (double)numCol);
+            subSectionYCount = (int)Math.Ceiling((double)map.GetLength(0) / (double)numRow);
+            setSubsectionIndex(0, 0);
         }
+        #endregion
+
+        #region public functions
+        public bool checkBounds(int x, int y)
+        {
+            return !((x>colEnd)|(x<colStart)|(y>rowEnd)|(y<rowStart));
+        }
+
+        public void setSubsectionIndex(int subsectionX, int subsectionY)
+        {
+
+        }
+        #endregion
     }
 }
