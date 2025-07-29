@@ -49,7 +49,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
 
         //[Row, Collum]
         //Returns true if all conditions allow the current Value
-        public abstract bool evaluatePoint(Point p, int[,] data);
+        public abstract bool evaluatePoint(int x, int y, int[,] data);
         
         /// <summary>
         /// This will edit the possible values map stored within this object by the rules provided.
@@ -57,13 +57,13 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
         /// </summary>
         /// <param name="p"></param>
         /// <param name="data"></param>
-        public abstract void ApplyPossibleDataAboutPoint(Point p, int[,] data);
+        public abstract void ApplyPossibleDataAboutPoint(int x, int y, int[,] data);
 
         #endregion
 
         #region rule Functions
 
-        public bool evaluatePoint(int x, int y, int[,] data) { return evaluatePoint(new Point(x, y), data); }
+        public bool evaluatePoint(Point p, int[,] data) { return evaluatePoint(p.X, p.Y, data); }
         public bool evaluateFullTable(int[,] data)
         {
             for(int y = 0; y< data.GetLength(0); y++)
@@ -73,9 +73,9 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
                 }
             return true;
         }
-        public void ApplyPossibleDataAboutPoint(int x, int y, int[,] data) 
+        public void ApplyPossibleDataAboutPoint(Point p, int[,] data) 
         {
-            ApplyPossibleDataAboutPoint(new Point(x, y), data); 
+            ApplyPossibleDataAboutPoint(p.X, p.Y, data); 
         }
 
         /// <summary>

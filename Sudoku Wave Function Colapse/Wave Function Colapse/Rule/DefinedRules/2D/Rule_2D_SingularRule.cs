@@ -20,15 +20,15 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         }
 
         //Interface Functions
-        public override bool evaluatePoint(Point p, int[,] data)
+        public override bool evaluatePoint(int x, int y, int[,] data)
         {
-            return rule.evaluate(data[p.Y, p.X]);
+            return rule.evaluate(data[y,x]);
         }
 
-        public override void ApplyPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public override void ApplyPossibleDataAboutPoint(int x, int y, int[,] data)
         {
-            if (andMode) { currentValues.and(p, rule.evaluateReturnRuleFilter(data[p.Y, p.X])); }
-            else currentValues.or(p, rule.evaluateReturnRuleFilter(data[p.Y, p.X]));
+            if (andMode) { loadedMapOfCurrentValues.and(x, y, rule.evaluateReturnRuleFilter(data[y,x])); }
+            else loadedMapOfCurrentValues.or(x, y, rule.evaluateReturnRuleFilter(data[y, x]));
 
         }
     }

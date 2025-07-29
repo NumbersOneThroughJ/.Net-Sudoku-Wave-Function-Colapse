@@ -50,11 +50,18 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         #endregion
 
         #region Public Functions
+        public virtual bool checkBounds(int x, int y)
+        {
+            return (x>0) && (y>0) && (x<map.GetLength(1)) && (y<map.GetLength(0));
+        }
+        #region getRuleFilter
         public Rule_Filter getValuesAsRule(int x, int y)
         {
             return map[y,x];
         }
         public Rule_Filter getValuesAsRule(Point point) { return getValuesAsRule(point.X, point.Y); }
+        #endregion
+        #region getHashes
         public WFC_MUX_Hash getPossibleHashForPoint(int x, int y) { return getValuesAsRule(x,y).evaluateReturnPossibleHash(0); }
         //public List<int>[,] getPossibleValuesAs2DArrofLists()
         //{
@@ -91,9 +98,9 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         //    }
         //    return returnArr;
         //}
-
-        //Combines with BlackList Priority
+        #endregion
         #region Logical And
+        //Combines with BlackList Priority
         //public void and(Point p, Rule_Filter r) { map[p.Y,p.X].And(r); }
         public void and(int x, int y, Rule_Filter r) { map[y, x].And(r); }
         //public void and(Point p, WFC_MUX_Hash negatives) { map[p.Y, p.X].Deny(negatives); }
@@ -185,7 +192,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         private int 
             colStart, colEnd, numCol,
             rowStart, rowEnd, numRow,
-            subSectionXCount, subSectionYCount;
+            subSectionXCount, subSectionYCount,
+            offsetX, offsetY,
+            absoluteOffsetX, absoluteOffsetY,
+            maxCol, maxRow;
         #endregion
         #region readonly Access Variables
         public int MAX_X => subSectionXCount;
@@ -194,26 +204,65 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
         #endregion
 
         #region Contstructors
-        public PossibleValuesMap_SubSection(PossibleValuesMap original, int numCol, int numRow)
+        public PossibleValuesMap_SubSection(PossibleValuesMap original, int numCol, int numRow)//, int offsetX, int offsetY)
         {
             map = original.map;
-            this.numCol = numCol;
-            this.numRow = numRow;
-            subSectionXCount = (int)Math.Ceiling((double)map.GetLength(1) / (double)numCol);
-            subSectionYCount = (int)Math.Ceiling((double)map.GetLength(0) / (double)numRow);
+            this.maxCol = map.GetLength(1);
+            this.maxRow = map.GetLength(0);
+            this.numCol = (numCol == -1) ? map.GetLength(1) : Math.Clamp(numCol, 0, maxCol);
+            this.numRow = (numRow == -1) ? map.GetLength(0) : Math.Clamp(numRow, 0, maxRow);
+            //This is for the offset, it is not implemented yet
+            //this.offsetX = Math.Clamp(offsetX, -numCol, numCol);
+            //this.offsetY = Math.Clamp(offsetY, -numRow, numRow);
+            subSectionXCount = (int)Math.Ceiling((double)(map.GetLength(1)/* - this.offsetX*/) / (double)this.numCol);
+            subSectionYCount = (int)Math.Ceiling((double)(map.GetLength(0)/* - this.offsetY*/) / (double)this.numRow);
+            setSubsectionIndex(0, 0);
+        }
+        /// <summary>
+        /// Creates a subsection within bounds of another subsection
+        /// Will need offset (Fffffffffffffffffffffk)
+        /// Will need absoulute offset and a max collumn variable
+        /// Will also need to think about reusing these objects instead of creating new rules...
+        /// </summary>
+        /// <param name="macroSection"></param>
+        /// <param name="numCol"></param>
+        /// <param name="numRow"></param>
+        public PossibleValuesMap_SubSection(PossibleValuesMap_SubSection macroSection, int numCol, int numRow)
+        {
+            map = macroSection.map;
+            this.numCol = (numCol == -1) ? macroSection.numCol : Math.Clamp(numCol, 0, macroSection.numCol);
+            this.numRow = (numRow == -1) ? macroSection.numRow : Math.Clamp(numRow, 0, macroSection.numRow);
+            //This is for the offset, it is not implemented yet
+            //this.offsetX = Math.Clamp(offsetX, -numCol, numCol);
+            //this.offsetY = Math.Clamp(offsetY, -numRow, numRow);
+            subSectionXCount = (int)Math.Ceiling((double)(macroSection.numCol/* - this.offsetX*/) / (double)numCol);
+            subSectionYCount = (int)Math.Ceiling((double)(macroSection.numRow/* - this.offsetY*/) / (double)numRow);
             setSubsectionIndex(0, 0);
         }
         #endregion
 
         #region public functions
-        public bool checkBounds(int x, int y)
+        /// <summary>
+        /// Returns true if the selected location is within bounds
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public override bool checkBounds(int x, int y)
         {
             return !((x>colEnd)|(x<colStart)|(y>rowEnd)|(y<rowStart));
         }
 
         public void setSubsectionIndex(int subsectionX, int subsectionY)
         {
-
+            //Need bounds checking for subsection...
+            //for now it will just rewrap
+            subsectionX %= subSectionXCount;
+            subsectionY %= subSectionYCount;
+            colStart = 0;
+            colEnd = Math.Clamp(numCol * subsectionX,0, map.GetLength(1));
+            rowStart = 0;
+            rowEnd = Math.Clamp(numRow * subsectionY, 0, map.GetLength(0));
         }
         #endregion
     }

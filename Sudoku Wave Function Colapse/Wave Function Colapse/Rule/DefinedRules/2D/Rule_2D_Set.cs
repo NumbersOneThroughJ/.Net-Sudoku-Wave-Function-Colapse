@@ -39,21 +39,21 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                 return false;
             }
         }
-        public override void ApplyPossibleDataAboutPoint(int x, int y, int[,] data, PossibleValuesMap currentValues)
+        public override void ApplyPossibleDataAboutPoint(int x, int y, int[,] data)
         {
             if (andMode)
             {
                 foreach (ARule_2D_Base rule in rules)
                 {
-                    currentValues.and(
-                        rule.ApplyPossibleDataAboutPoint(x,y, data, currentValues));
+                    loadedMapOfCurrentValues.and(
+                        rule.ApplyPossibleDataAboutPoint(x,y, data));
                 }
             } else
             {
                 foreach (ARule_2D_Base rule in rules)
                 {
-                    currentValues.or(
-                        rule.ApplyPossibleDataAboutPoint(x,y, data, currentValues));
+                    loadedMapOfCurrentValues.or(
+                        rule.ApplyPossibleDataAboutPoint(x,y, data));
                 }
             }
         }
