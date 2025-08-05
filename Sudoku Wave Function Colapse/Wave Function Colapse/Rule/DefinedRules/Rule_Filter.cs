@@ -30,12 +30,14 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         //target is not necessary for this function
         //Generally pass 0 to this function
         //Hash of possible values
-        public WFC_MUX_Hash evaluateReturnPossibleHash(int target)
+        public WFC_MUX_Hash evaluateReturnPossibleHash(int target, WFC_MUX_Hash retHash = null)
         {
+            retHash = softWhiteList;
             return softWhiteList;
         }
-        public WFC_MUX_Hash evaluateReturnNegativeHash(int target)
+        public WFC_MUX_Hash evaluateReturnNegativeHash(int target, WFC_MUX_Hash retHash = null)
         {
+            retHash = hardBlackList;
             return hardBlackList;
         }
 
@@ -83,44 +85,50 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
             return hardBlackList.getHash(index) == 1;
         }
 
-        Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target)
+        Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target, Rule_Filter retRule = null)
         {
+            retRule = this;
             return this;
         }
-
-
-        //These should be used over the static operators. They will be faster.
-        /*Combines all lists within the two rule_Filters
-         * Adds all whitelisted items, then the blacklist takes the precident over the whitelist
-         * AND
-         */
+         
+        /// <summary>
+        /// Ands the rule filter provided into this rule filter
+        /// Use this for speed instead of the operators, this will not create a new memory alocation
+        /// The rule will then have a whitelist and blacklist combination that, when chosen a value from, will allow for both rules to be satisfied
+        /// *Adds all whitelisted items, then the blacklist takes the precident over the whitelist
+        /// </summary>
+        /// <param name="rule2">Rule_Filter object to combine with </param>
         public void And(Rule_Filter rule2)
         {
             if (rule2 == null) return;
-            softWhiteList &= rule2.softWhiteList;
-            hardBlackList &= rule2.hardBlackList;
-            softWhiteList &= ~hardBlackList;
+            softWhiteList.andFrom(rule2.softWhiteList);
+            hardBlackList.andFrom(rule2.hardBlackList);
+            softWhiteList.andFrom(hardBlackList, true);
         }
         public void  Deny(WFC_MUX_Hash blacklistHash)
         {
-            hardBlackList &= blacklistHash;
-            softWhiteList &= ~hardBlackList;
+            hardBlackList.orFrom(blacklistHash);
+            softWhiteList.andFrom(blacklistHash, true);
         }
-        /* Combines all lists within the two rule_Filters
-         *  Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
-         *  OR
-         */
+        
+        /// <summary>
+        /// Ands the rule filter provided into this rule filter
+        /// Use this for speed instead of the operators, this will not create a new memory alocation
+        /// The rule will then have a whitelist and blacklist combination that, when chosen a value from, will allow for one of the two rules to be satisfied
+        /// *Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
+        /// </summary>
+        /// <param name="rule2">Rule_Filter object to combine with </param>
         public void  Or(Rule_Filter rule2)
         {
             if (rule2 == null) return;
-            softWhiteList &= rule2.softWhiteList;
-            hardBlackList &= rule2.hardBlackList;
-            hardBlackList &= ~softWhiteList;
+            softWhiteList.andFrom(rule2.softWhiteList);
+            hardBlackList.andFrom(rule2.hardBlackList);
+            hardBlackList.andFrom(softWhiteList, true);
         }
         public void  Allow(WFC_MUX_Hash whiteListHash)
         {
-            whiteListHash &= whiteListHash;
-            hardBlackList &= ~softWhiteList;
+            softWhiteList.orFrom(whiteListHash);
+            hardBlackList.andFrom(whiteListHash, true);
         }
 
         public object Clone()
@@ -133,6 +141,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         /*Combines all lists within the two rule_Filters
          * Adds all whitelisted items, then the blacklist takes the precident over the whitelist
          * AND
+         * WILL CREATE AND RETURN A NEW RULE_FILTER
          */
         public static Rule_Filter operator & (Rule_Filter rule1, Rule_Filter rule2)
         {
@@ -153,6 +162,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         /* Combines all lists within the two rule_Filters
          *  Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
          *  OR
+         * WILL CREATE AND RETURN A NEW RULE_FILTER
          */
         public static Rule_Filter operator |(Rule_Filter rule1, Rule_Filter rule2)
         {
