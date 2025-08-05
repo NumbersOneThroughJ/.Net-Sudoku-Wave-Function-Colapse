@@ -11,7 +11,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
 {
 
     //[Row, Collum]
-    internal class Rule_2D_Mask : IRule_2D_Base
+    internal class Rule_2D_Mask : ARule_2D_Base
     {
         //Interface Functions
         /*evaluate
@@ -32,7 +32,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
          * If asked, (1,3) would also evaluate to true as would (0,1)
          * This is an individual mask alone by itself.
          */
-        public bool evaluatePoint(Point p, int[,] data)
+        public override bool evaluatePoint(Point p, int[,] data)
         {
             Point dataRelativePoint = new Point();
             IRuleBase maskRelativeRule;
@@ -58,7 +58,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
          * 
          * 
          */
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public override void ApplyPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
         {
             Point dataRelativePoint = new Point();
             IRuleBase maskRelativeRule;
@@ -73,10 +73,10 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
                     {
                         dataRelativeData = data[dataRelativePoint.Y, dataRelativePoint.X];
                         maskRelativeRule = ruleMask[yMaskRel, xMaskRel];
-                        currentValues.or(dataRelativePoint.X, dataRelativePoint.Y, maskRelativeRule.evaluateReturnRuleFilter(dataRelativeData));
+                        if(andMode) { currentValues.or(dataRelativePoint.X, dataRelativePoint.Y, maskRelativeRule.evaluateReturnRuleFilter(dataRelativeData)); }
+                        else currentValues.or(dataRelativePoint.X, dataRelativePoint.Y, maskRelativeRule.evaluateReturnRuleFilter(dataRelativeData));
                     }
                 }
-            return currentValues;
         }
 
         //Local Variables
@@ -85,7 +85,8 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
         Point maskRelativeStart, maskRelativeEnd;
 
         //constructors
-        public Rule_2D_Mask()
+        public Rule_2D_Mask(bool andMode = false)
+            :base(andMode)
         {
             ruleMask = new IRuleBase[0, 0];
             maskAnchor = new Point(0, 0);
@@ -93,7 +94,8 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
             maskRelativeEnd = new Point(0, 0);
         }
 
-        public Rule_2D_Mask(IRuleBase[,] ruleMask, Point maskAnchor)
+        public Rule_2D_Mask(IRuleBase[,] ruleMask, Point maskAnchor, bool andMode = false)
+            : base(andMode)
         {
             this.ruleMask = ruleMask;
             this.maskAnchor = maskAnchor;

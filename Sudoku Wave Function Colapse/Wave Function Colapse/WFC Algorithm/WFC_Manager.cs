@@ -83,5 +83,11 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
             }
             return true;
         }
+
+        public int[,] collapseTest(int[,] valuesMap)
+        {
+            brain.collapseAPoint(valuesMap, setMapValue, resetMapAtLocation, getPossibleValues, checkPoints);
+            return valuesMap;
+        }
     }
 }

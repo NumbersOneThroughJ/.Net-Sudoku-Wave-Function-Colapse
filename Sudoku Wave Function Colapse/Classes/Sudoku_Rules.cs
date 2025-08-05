@@ -167,27 +167,27 @@ namespace Sudoku_Wave_Function_Colapse.Classes
             },
                 new Point(0, 9));
         }
-        public static IRule_2D_Base makeDictionaryOfSquareMasks()
+        public static ARule_2D_Base makeDictionaryOfSquareMasks()
         {
-            Dictionary<int, IRule_2D_Base> dic = new Dictionary<int, IRule_2D_Base>();
+            Dictionary<int, ARule_2D_Base> dic = new Dictionary<int, ARule_2D_Base>();
             for(int i = -1; i<=9; i++)
             {
                 dic[i]=make2DRuleMask(i);
             }
             return new Rule_2D_Dictionary(dic);
         }
-        public static IRule_2D_Base makeHorizontalDictionaryOfMasks()
+        public static ARule_2D_Base makeHorizontalDictionaryOfMasks()
         {
-            Dictionary<int, IRule_2D_Base> dic = new Dictionary<int, IRule_2D_Base>();
+            Dictionary<int, ARule_2D_Base> dic = new Dictionary<int, ARule_2D_Base>();
             for (int i = -1; i <= 9; i++)
             {
                 dic[i] = makeHorizontalRuleMask(i);
             }
             return new Rule_2D_Dictionary(dic);
         }
-        public static IRule_2D_Base makeVerticalDictionaryOfMasks()
+        public static ARule_2D_Base makeVerticalDictionaryOfMasks()
         {
-            Dictionary<int, IRule_2D_Base> dic = new Dictionary<int, IRule_2D_Base>();
+            Dictionary<int, ARule_2D_Base> dic = new Dictionary<int, ARule_2D_Base>();
             for (int i = -1; i <= 9; i++)
             {
                 dic[i] = makeVerticalRuleMask(i);

@@ -7,29 +7,29 @@ using System.Threading.Tasks;
 
 namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._2D
 {
-    internal class Rule_2D_SingularRule : IRule_2D_Base
+    internal class Rule_2D_SingularRule : ARule_2D_Base
     {
         //Local Variables
         IRuleBase rule;
 
         //Constructors
-        public Rule_2D_SingularRule(IRuleBase rule)
+        public Rule_2D_SingularRule(IRuleBase rule, bool andMode)
+            : base(andMode)
         {
             this.rule = rule;
         }
 
         //Interface Functions
-        public bool evaluatePoint(Point p, int[,] data)
+        public override bool evaluatePoint(int x, int y, int[,] data)
         {
-            return rule.evaluate(data[p.Y, p.X]);
+            return rule.evaluate(data[y,x]);
         }
 
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public override void ApplyPossibleDataAboutPoint(int x, int y, int[,] data)
         {
+            if (andMode) { loadedMapOfCurrentValues.and(x, y, rule.evaluateReturnRuleFilter(data[y,x])); }
+            else loadedMapOfCurrentValues.or(x, y, rule.evaluateReturnRuleFilter(data[y, x]));
 
-            currentValues.or(p, rule.evaluateReturnRuleFilter(data[p.Y, p.X]));
-
-            return currentValues;
         }
     }
 }

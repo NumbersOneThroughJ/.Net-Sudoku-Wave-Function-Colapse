@@ -7,16 +7,18 @@ using System.Threading.Tasks;
 
 namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._2D
 {
-    internal class Rule_2D_AxisDivider : IRule_2D_Base
+    internal class Rule_2D_AxisDivider : ARule_2D_Base
     {
 
         //Local Variables
         int axisDividerLength;
         int axisIndex;//0 is row, 1 is collum
-        IRule_2D_Base rule;
+        ARule_2D_Base rule;
+        PossibleValuesMap[] subsections;
 
         //Constructors
-        public Rule_2D_AxisDivider(int divisionLength, bool divideOnCollum, IRule_2D_Base rule)
+        public Rule_2D_AxisDivider(int divisionLength, bool divideOnCollum, ARule_2D_Base rule, bool andMode = false)
+            : base(andMode)
         {
             axisDividerLength = divisionLength;
             axisIndex = divideOnCollum ? 1 : 0;
@@ -25,7 +27,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
 
 
         //Interface Functions
-        public bool evaluatePoint(Point p, int[,] data)
+        public override bool evaluatePoint(Point p, int[,] data)
         {
             //[y,x]
             int y = p.Y;
@@ -45,7 +47,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
             return rule.evaluatePoint(x, y, getSubSection(subsection, data));
         }
 
-        public PossibleValuesMap getPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
+        public override void ApplyPossibleDataAboutPoint(Point p, int[,] data, PossibleValuesMap currentValues)
         {
             //[y,x]
             int y = p.Y;
@@ -62,21 +64,32 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules._
                     x = x % axisDividerLength;
                     break;
             }
-            PossibleValuesMap temp = rule.getPossibleDataAboutPoint(x, y, getSubSection(subsection, data));
+
+            //Previously, before the possible values map was editted upon by the rule, this would create a new possible values map object
+            //That possible values map object was constrained to the bounds of the subsection
+            //This needs to be changed. perhaps an extra parameter called bounds? Though this rule is supposed to be those bounds.
+            //TLDR, possibleValuesMap needs to only return a small section and not the full section. Honestly too, need to remove the return for possible values map.
+            //Maybe there should be a getPossibleData that creates a new PossibleValuesMap then feeds that map into the ApplyPossibleData function?
+            //It would be on the user to make efficient use of it however.
+            //BUT that jacob's thoughts for future jacob.
+
+            //PossibleValuesMap temp = rule.getPossibleDataAboutPoint(x, y, getSubSection(subsection, data), new PossibleValuesMap(currentValues));
+            
             for(int tempY = 0; tempY < temp.map.GetLength(0); tempY++)
                 for (int tempX = 0; tempX < temp.map.GetLength(1); tempX++)
                 {
                     switch (axisIndex)
                     {
                         case 0:
-                            currentValues.or(tempX, (subsection * axisDividerLength) + tempY, temp.getValuesAsRule(tempX,tempY));
+                            if (andMode) { currentValues.and(tempX, (subsection * axisDividerLength) + tempY, temp.getValuesAsRule(tempX, tempY)); }
+                            else currentValues.or(tempX, (subsection * axisDividerLength) + tempY, temp.getValuesAsRule(tempX,tempY));
                             break;
                         case 1:
-                            currentValues.or((subsection * axisDividerLength) + tempX, tempY, temp.getValuesAsRule(tempX, tempY));
+                            if (andMode) { currentValues.and((subsection * axisDividerLength) + tempX, tempY, temp.getValuesAsRule(tempX, tempY)); }
+                            else currentValues.or((subsection * axisDividerLength) + tempX, tempY, temp.getValuesAsRule(tempX, tempY));
                             break;
                     }
                 }
-            return currentValues;
         }
 
         //Private Functions

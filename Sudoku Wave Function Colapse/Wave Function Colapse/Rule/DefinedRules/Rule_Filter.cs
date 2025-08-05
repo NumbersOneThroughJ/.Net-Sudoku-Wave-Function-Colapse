@@ -15,7 +15,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
      * When given a value, if that value is not on the deny list, it is allowed.
      * When asking for a potential value, it will return its suggestive whitelist
      */
-    internal class Rule_Filter : IRuleBase
+    internal class Rule_Filter : IRuleBase, ICloneable
     {
 
 
@@ -90,31 +90,50 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
             retRule = this;
             return this;
         }
-
+         
         /// <summary>
         /// Ands the rule filter provided into this rule filter
         /// Use this for speed instead of the operators, this will not create a new memory alocation
         /// The rule will then have a whitelist and blacklist combination that, when chosen a value from, will allow for both rules to be satisfied
+        /// *Adds all whitelisted items, then the blacklist takes the precident over the whitelist
         /// </summary>
-        /// <param name="other">Rule_Filter object to combine with </param>
-        public void andFrom(Rule_Filter other)
+        /// <param name="rule2">Rule_Filter object to combine with </param>
+        public void And(Rule_Filter rule2)
         {
-            softWhiteList.andFrom(other.softWhiteList);
-            hardBlackList.andFrom(other.hardBlackList);
+            if (rule2 == null) return;
+            softWhiteList.andFrom(rule2.softWhiteList);
+            hardBlackList.andFrom(rule2.hardBlackList);
             softWhiteList.andFrom(hardBlackList, true);
         }
-
+        public void  Deny(WFC_MUX_Hash blacklistHash)
+        {
+            hardBlackList.orFrom(blacklistHash);
+            softWhiteList.andFrom(blacklistHash, true);
+        }
+        
         /// <summary>
         /// Ands the rule filter provided into this rule filter
         /// Use this for speed instead of the operators, this will not create a new memory alocation
         /// The rule will then have a whitelist and blacklist combination that, when chosen a value from, will allow for one of the two rules to be satisfied
+        /// *Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
         /// </summary>
-        /// <param name="other">Rule_Filter object to combine with </param>
-        public void orFrom(Rule_Filter other)
+        /// <param name="rule2">Rule_Filter object to combine with </param>
+        public void  Or(Rule_Filter rule2)
         {
-            softWhiteList.andFrom(other.softWhiteList);
-            hardBlackList.andFrom(other.hardBlackList);
+            if (rule2 == null) return;
+            softWhiteList.andFrom(rule2.softWhiteList);
+            hardBlackList.andFrom(rule2.hardBlackList);
             hardBlackList.andFrom(softWhiteList, true);
+        }
+        public void  Allow(WFC_MUX_Hash whiteListHash)
+        {
+            softWhiteList.orFrom(whiteListHash);
+            hardBlackList.andFrom(whiteListHash, true);
+        }
+
+        public object Clone()
+        {
+            return new Rule_Filter(this);
         }
 
         //quick functions
