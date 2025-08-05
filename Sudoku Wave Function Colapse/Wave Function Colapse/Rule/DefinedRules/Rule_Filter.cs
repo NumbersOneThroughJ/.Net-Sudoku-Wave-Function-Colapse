@@ -30,12 +30,14 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         //target is not necessary for this function
         //Generally pass 0 to this function
         //Hash of possible values
-        public WFC_MUX_Hash evaluateReturnPossibleHash(int target)
+        public WFC_MUX_Hash evaluateReturnPossibleHash(int target, WFC_MUX_Hash retHash = null)
         {
+            retHash = softWhiteList;
             return softWhiteList;
         }
-        public WFC_MUX_Hash evaluateReturnNegativeHash(int target)
+        public WFC_MUX_Hash evaluateReturnNegativeHash(int target, WFC_MUX_Hash retHash = null)
         {
+            retHash = hardBlackList;
             return hardBlackList;
         }
 
@@ -83,9 +85,36 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
             return hardBlackList.getHash(index) == 1;
         }
 
-        Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target)
+        Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target, Rule_Filter retRule = null)
         {
+            retRule = this;
             return this;
+        }
+
+        /// <summary>
+        /// Ands the rule filter provided into this rule filter
+        /// Use this for speed instead of the operators, this will not create a new memory alocation
+        /// The rule will then have a whitelist and blacklist combination that, when chosen a value from, will allow for both rules to be satisfied
+        /// </summary>
+        /// <param name="other">Rule_Filter object to combine with </param>
+        public void andFrom(Rule_Filter other)
+        {
+            softWhiteList.andFrom(other.softWhiteList);
+            hardBlackList.andFrom(other.hardBlackList);
+            softWhiteList.andFrom(hardBlackList, true);
+        }
+
+        /// <summary>
+        /// Ands the rule filter provided into this rule filter
+        /// Use this for speed instead of the operators, this will not create a new memory alocation
+        /// The rule will then have a whitelist and blacklist combination that, when chosen a value from, will allow for one of the two rules to be satisfied
+        /// </summary>
+        /// <param name="other">Rule_Filter object to combine with </param>
+        public void orFrom(Rule_Filter other)
+        {
+            softWhiteList.andFrom(other.softWhiteList);
+            hardBlackList.andFrom(other.hardBlackList);
+            hardBlackList.andFrom(softWhiteList, true);
         }
 
         //quick functions
@@ -93,6 +122,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         /*Combines all lists within the two rule_Filters
          * Adds all whitelisted items, then the blacklist takes the precident over the whitelist
          * AND
+         * WILL CREATE AND RETURN A NEW RULE_FILTER
          */
         public static Rule_Filter operator & (Rule_Filter rule1, Rule_Filter rule2)
         {
@@ -113,6 +143,7 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules
         /* Combines all lists within the two rule_Filters
          *  Adds all blacklisted items, then the whiteListed items. WhiteList takes precident over blacklist
          *  OR
+         * WILL CREATE AND RETURN A NEW RULE_FILTER
          */
         public static Rule_Filter operator |(Rule_Filter rule1, Rule_Filter rule2)
         {

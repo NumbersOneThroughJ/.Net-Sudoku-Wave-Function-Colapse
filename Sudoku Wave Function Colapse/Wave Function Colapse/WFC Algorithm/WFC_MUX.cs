@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -82,6 +83,48 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.WFC_Algorithm
                 retHash.hashs[i] = ~hashs[i];
             }
             return retHash;
+        }
+
+        public void andFrom(WFC_MUX_Hash other, Boolean invert = false)
+        {
+            if (hashs.Length != other.hashs.Length)
+            {
+                throw new ArgumentException("Hash Capacities are different. Something went wrong", "h1 capacity != h2 capacity");
+            }
+            if (invert) {
+                for (int i = 0; i < hashs.Length; i++)
+                {
+                    hashs[i] &= ~other.hashs[i];
+                }
+            } else
+            {
+                for (int i = 0; i < hashs.Length; i++)
+                {
+                    hashs[i] &= other.hashs[i];
+                }
+            }
+        }
+
+        public void orFrom(WFC_MUX_Hash other, Boolean invert = false)
+        {
+            if (hashs.Length != other.hashs.Length)
+            {
+                throw new ArgumentException("Hash Capacities are different. Something went wrong", "h1 capacity != h2 capacity");
+            }
+            if (invert)
+            {
+                for (int i = 0; i < hashs.Length; i++)
+                {
+                    hashs[i] |= ~other.hashs[i];
+                }
+            }
+            else
+            {
+                for (int i = 0; i < hashs.Length; i++)
+                {
+                    hashs[i] |= other.hashs[i];
+                }
+            }
         }
 
         public static WFC_MUX_Hash operator ~ (WFC_MUX_Hash hash)

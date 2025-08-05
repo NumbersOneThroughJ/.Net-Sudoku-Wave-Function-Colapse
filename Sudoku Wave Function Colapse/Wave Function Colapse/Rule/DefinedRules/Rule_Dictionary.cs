@@ -20,18 +20,18 @@ namespace Sudoku_Wave_Function_Colapse.Wave_Function_Colapse.Rule.DefinedRules.A
         {
             return ruleLedger[target].evaluate(target);
         }
-        public WFC_MUX_Hash evaluateReturnPossibleHash(int target)
+        public WFC_MUX_Hash evaluateReturnPossibleHash(int target, WFC_MUX_Hash retHash = null)
         {
-            return ruleLedger[target].evaluateReturnPossibleHash(target);
+            return ruleLedger[target].evaluateReturnPossibleHash(target, retHash);
         }
 
-        public WFC_MUX_Hash evaluateReturnNegativeHash(int target)
+        public WFC_MUX_Hash evaluateReturnNegativeHash(int target, WFC_MUX_Hash retHash = null)
         {
-            return ruleLedger[target].evaluateReturnNegativeHash(target);
+            return ruleLedger[target].evaluateReturnNegativeHash(target, retHash);
         }
-        Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target)
+        Rule_Filter IRuleBase.evaluateReturnRuleFilter(int target, Rule_Filter retRule = null)
         {
-            return ruleLedger[target].evaluateReturnRuleFilter(target);
+            return ruleLedger[target].evaluateReturnRuleFilter(target, retRule);
         }
 
         public void reset() { }
